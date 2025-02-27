@@ -1,8 +1,10 @@
+from datetime import datetime as dt
+import json
+
+from pydantic import ValidationError
 import pytest
+
 from horizon.CatalogedResource import CatalogedResource
-from horizon.Entity import Entity, Creator, Contributor
-from horizon.License import License
-from horizon.Location import Location, BoundingBox, Centroid
 from horizon.Dataset import (
     Dataset,
     UsgsMissionArea,
@@ -15,10 +17,10 @@ from horizon.Dataset import (
     Keyword,
     RelatedIdentifierTypeEnum,
 )
-from datetime import datetime as dt
-from pydantic import ValidationError
+from horizon.Entity import Entity, Creator, Contributor
+from horizon.License import License
+from horizon.Location import Location, BoundingBox, Centroid
 
-import json
 
 data = {
     "title": "test",

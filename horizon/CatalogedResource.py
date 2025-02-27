@@ -1,7 +1,7 @@
-from pydantic import BaseModel, HttpUrl
-from typing import Optional
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+
+from pydantic import BaseModel, HttpUrl
 
 
 class UsgsAssetTypeEnum(str, Enum):
@@ -31,7 +31,7 @@ class CatalogedResource(BaseModel):
         Date and time that the resource's record was created in the catalog
     usgsModified: datetime
         Date and time that the resource's record was last modified
-    identifier: Optional[HttpUrl]
+    identifier: HttpUrl | None
         A unique identifier of the resource being described or cataloged.
         This identifier should be represented by a URI.
     usgsIdentifier: str
@@ -46,6 +46,6 @@ class CatalogedResource(BaseModel):
     description: str
     usgsCreated: datetime
     usgsModified: datetime
-    identifier: Optional[HttpUrl]
+    identifier: HttpUrl | None
     usgsIdentifier: str
     accessRights: AccessRightsEnum

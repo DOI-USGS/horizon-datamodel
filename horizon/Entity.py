@@ -1,7 +1,7 @@
-from pydantic import BaseModel, HttpUrl
-from typing import Optional
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+
+from pydantic import BaseModel, HttpUrl
 
 
 class NameTypeEnum(str, Enum):
@@ -54,22 +54,22 @@ class Entity(BaseModel):
 
     Fields
     ------
-    entity_id: Optional[str]
+    entity_id: str | None
         Identifier to uniquely identify an entity within a given system
     name: str
         Name by which an entity is known
     nameType: NameTypeEnum
         The type of entity described by a name
-    nameIdentifier: Optional[str]
+    nameIdentifier: str | None
         A globally unique persistent identifier for an entity (e.g., ORCID iD, ROR ID).
 
     """
 
-    entity_id: Optional[str]
+    entity_id: str | None
     name: str
     nameType: NameTypeEnum
-    nameIdentifier: Optional[str]
-    email: Optional[str]
+    nameIdentifier: str | None
+    email: str | None
 
 
 class Creator(Entity):
@@ -79,15 +79,15 @@ class Creator(Entity):
     ------
     position: int
         Position that the creator appears within a citation
-    affiliation: Optional[str]
+    affiliation: str | None
         The organization with which a creator is affiliated
-    affiliationIdentifier: Optional[str]
+    affiliationIdentifier: str | None
         A globally unique persistent identifier for the affiliated organization.
     """
 
     position: int
-    affiliation: Optional[str]
-    affiliationIdentifier: Optional[str]
+    affiliation: str | None
+    affiliationIdentifier: str | None
 
 
 class Contributor(Creator):
