@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 
 class BoundingBox(BaseModel):
@@ -54,5 +53,5 @@ class Location(BaseModel):
         The longitude and latitude coordinates of the Location's centroid
     """
 
-    bbox: Optional[BoundingBox]
-    centroid: Optional[Centroid]
+    bbox: BoundingBox | None
+    centroid: Centroid | None

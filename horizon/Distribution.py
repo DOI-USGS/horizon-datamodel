@@ -1,6 +1,7 @@
-from pydantic import BaseModel, HttpUrl
-from typing import Optional
 from datetime import datetime
+
+from pydantic import BaseModel, HttpUrl
+
 from .Entity import Entity
 
 # Placeholder for Distribution Schema Definition
@@ -31,14 +32,14 @@ class Distribution(BaseModel):
 
     Fields
     ------
-    title: Optional[str]
+    title: str | None
         User added free text description of the distribution.
         We could use this field for filename and description for user-provided free text
-    name: Optional[str]
+    name: str | None
         filename for downloadable files
-    description: Optional[str]
+    description: str | None
         Description of the type of distribution (e.g., Landing Page, Original Metadata, WMS Service)
-    format: Optional[str]
+    format: str | None
         Should only be used if IANA Media Type is not available
         https://www.iana.org/assignments/media-types/media-types.xhtml
         If IANA Media Type is available mediaType property should be used.
@@ -48,9 +49,9 @@ class Distribution(BaseModel):
         The URL of the downloadable file in a given format.
     accessURL: HttpUrl
         A URL of the resource that gives access to a distribution of the dataset.
-    byteSize: Optional[int]
+    byteSize: int | None
         The size of a distribution in bytes.
-    checksum: Optional[Checksum]
+    checksum: Checksum | None
         Checksum value and algorithm that enables integrity checks of the contents of a file.
     modifiedBy: Entity
         The person or service that last modified the distribution information or uploaded the file.
@@ -61,15 +62,15 @@ class Distribution(BaseModel):
         We may need a special preview class to make this work
     """
 
-    title: Optional[str]
-    name: Optional[str]
-    description: Optional[str]
-    format: Optional[str]
-    mediaType: Optional[str]
-    downloadURL: Optional[HttpUrl]
-    accessURL: Optional[HttpUrl]
-    byteSize: Optional[int]
-    checksum: Optional[Checksum]
+    title: str | None
+    name: str | None
+    description: str | None
+    format: str | None
+    mediaType: str | None
+    downloadURL: HttpUrl | None
+    accessURL: HttpUrl | None
+    byteSize: int | None
+    checksum: Checksum | None
     modifiedBy: Entity
     modified: datetime
     useForPreview: bool

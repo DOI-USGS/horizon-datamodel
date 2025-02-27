@@ -1,11 +1,12 @@
-from pydantic import BaseModel, HttpUrl
-from typing import List, Optional
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+
+from pydantic import BaseModel, HttpUrl
+
 from .CatalogedResource import CatalogedResource
+from .Distribution import Distribution
 from .Entity import Entity, Creator, Contributor
 from .License import License
-from .Distribution import Distribution
 from .Location import Location
 
 
@@ -15,13 +16,13 @@ class Keyword(BaseModel):
         The keyword or tag
     conceptScheme: str = None
         The name of the scheme or classification code or authority (e.g., USGS Thesaurus)
-    conceptUri: Optional[HttpUrl]
+    conceptUri: HttpUrl | None
         The URI of the concept
     """
 
     concept: str
     conceptScheme: str = None
-    conceptUri: Optional[HttpUrl]
+    conceptUri: HttpUrl | None
 
 
 class DataciteRelationTypeEnum(str, Enum):
@@ -148,14 +149,14 @@ class PeriodOfTime(BaseModel):
 
     Fields
     ------
-    startDate: Optional[datetime]
+    startDate: datetime | None
         The start of the period.
-    endDate: Optional[datetime]
+    endDate: datetime | None
         The end of the period
     """
 
-    startDate: Optional[datetime]
-    endDate: Optional[datetime]
+    startDate: datetime | None
+    endDate: datetime | None
 
 
 class UsgsDataSource(BaseModel):
@@ -186,17 +187,17 @@ class VersionHistory(BaseModel):
     """Description of versions of the dataset described within a given identifier.
 
 
-    version: Optional[str]
+    version: str | None
         The version indicator (name or identifier) of a resource.
-    issued: Optional[datetime]
+    issued: datetime | None
         Date of formal issuance (e.g., publication) of the resource.
-    versionNotes: Optional[datetime]
+    versionNotes: datetime | None
         A description of changes between this version and the previous version of the resource
     """
 
-    version: Optional[str]
-    issued: Optional[datetime]
-    versionNotes: Optional[datetime]
+    version: str | None
+    issued: datetime | None
+    versionNotes: datetime | None
 
 
 class Component(BaseModel):
@@ -206,7 +207,7 @@ class Component(BaseModel):
 
     Fields
     ------
-    identifier: Optional[HttpUrl]
+    identifier: HttpUrl | None
         A granular DOI used to identify the component that is different that the
         CatalogedResource's DOI
     title: str
@@ -218,19 +219,19 @@ class Component(BaseModel):
         In most cases this citation will be the same as the Dataset citation
     catalogRecord: bool
         Boolean indication if the metadata should be cataloged independently from the Dataset
-    distribution: List[Distribution]
+    distribution: list[Distribution]
         An available distribution of the component.
-    alternateIdentifier: Optional[AlternateIdentifier]
+    alternateIdentifier: AlternateIdentifier | None
         USGS Metadata PID
     """
 
-    identifier: Optional[HttpUrl]
+    identifier: HttpUrl | None
     title: str
     description: str
     usgsCitation: str
     catalogRecord: bool
-    distribution: List[Distribution]
-    alternateIdentifier: Optional[AlternateIdentifier]
+    distribution: list[Distribution]
+    alternateIdentifier: AlternateIdentifier | None
 
 
 class Dataset(CatalogedResource):
@@ -240,7 +241,7 @@ class Dataset(CatalogedResource):
     ------
     issued: datetime
         Date of formal issuance (e.g., publication) of the resource.
-    modified: Optional[datetime]
+    modified: datetime | None
         Most recent date on which the resource was changed, updated or modified.
     creator: Creator
         The entity responsible for producing the resource.
@@ -256,53 +257,51 @@ class Dataset(CatalogedResource):
         A legal document under which the resource is made available.
     usgsDataSource: UsgsDataSource
         The USGS Science Center or Program responsible for managing the resource.
-    distribution: List[Distribution]
+    distribution: list[Distribution]
         An available distribution of the dataset.
-    component: List[Component]
+    component: list[Component]
         A container for holding components or subsets of the overall Dataset
         that require additional metadata to be discovered and understood
-    keyword: Optional[List[Keyword]]
+    keyword: list[Keyword] | None
         A keyword or tag describing the resource.
-    spatial: Optional[Location]
+    spatial: Location | None
         The geographical area covered by the dataset.
-    temporal: Optional[List[PeriodOfTime]]
+    temporal: list[PeriodOfTime] | None
         The temporal period that the dataset covers.
-    relation: Optional[List[RelatedIdentifier]]
+    relation: list[RelatedIdentifier] | None
         A resource with a relationship to the cataloged resource.
         This property includes DCAT sub-properties hasPart, isReferencedBy, previousVersion, replaces.
-    alternateIdentifier: Optional[List[AlternateIdentifier]]
+    alternateIdentifier: list[AlternateIdentifier] | None
         An identifier or identifiers other than the primary Identifier applied to the resource being registered.
-    usgsPurpose: Optional[str]
+    usgsPurpose: str | None
         A summary of the intentions with which the resource was developed
-    usgsMissionArea: Optional[UsgsMissionArea]
+    usgsMissionArea: UsgsMissionArea | None
         The USGS Mission Area responsible for managing the resource.
-    qualifiedAttribution: Optional[Contributor]
+    qualifiedAttribution: Contributor | None
         Link to an Agent having some form of responsibility for the resource
-    versionHistory: Optional[VersionHistory]
+    versionHistory: VersionHistory | None
         Description of versions of the dataset described within a given identifier.
     """
 
     issued: datetime
-    modified: Optional[
-        datetime
-    ]  # Adding this here instead of under version as an optional field.
-    creator: List[Creator]
+    # Adding modified here instead of under version as an optional field.
+    modified: datetime | None
+    creator: list[Creator]
     publisher: Entity
     usgsCitation: str
     contactPoint: Entity
     usgsMetadataContactPoint: Entity
     license: License
     usgsDataSource: UsgsDataSource
-    distribution: List[Distribution]
-    component: List[Component]
-    keyword: Optional[List[Keyword]]
-    spatial: Optional[Location]
-    temporal: Optional[
-        List[PeriodOfTime]
-    ]  # I'm not sure if this can actually be a list in DCAT
-    relation: Optional[List[RelatedIdentifier]]
-    alternateIdentifier: Optional[List[AlternateIdentifier]]
-    usgsPurpose: Optional[str]
-    usgsMissionArea: Optional[UsgsMissionArea]
-    qualifiedAttribution: Optional[Contributor]
-    versionHistory: Optional[VersionHistory]
+    distribution: list[Distribution]
+    component: list[Component]
+    keyword: list[Keyword] | None
+    spatial: Location | None
+    # I'm not sure if PeriodOfTime can actually be a list in DCAT
+    temporal: list[PeriodOfTime] | None  
+    relation: list[RelatedIdentifier] | None
+    alternateIdentifier: list[AlternateIdentifier] | None
+    usgsPurpose: str | None
+    usgsMissionArea: UsgsMissionArea | None
+    qualifiedAttribution: Contributor | None
+    versionHistory: VersionHistory | None
