@@ -1,15 +1,19 @@
-from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 
 class NameTypeEnum(str, Enum):
     """The type of entity described by a name
 
-    Args:
-        str (_type_): _description_
-        Enum (_type_): _description_
+    usgs_personal = "USGS Personal"
+        USGS Federal staff or contractors
+    personal = "Personal"
+        Person who is not affiliated with USGS or a USGS contractor
+    organizational = "Organizational"
+        A government, nonprofit, research, or other organization
+    service = "Service"
+        Software that performs automated tasks
     """
 
     usgs_personal = "USGS Personal"
@@ -21,9 +25,7 @@ class NameTypeEnum(str, Enum):
 class ContributorTypeEnum(str, Enum):
     """The type of contributor of the resource.
 
-    Args:
-        str (_type_): _description_
-        Enum (_type_): _description_
+    See DataCite Metadata Schema for definitions: https://schema.datacite.org/
     """
 
     ContactPerson = "Contact Person"
@@ -58,7 +60,7 @@ class Entity(BaseModel):
         Identifier to uniquely identify an entity within a given system
     name: str
         Name by which an entity is known
-    nameType: NameTypeEnum
+    nameType: NameTypeEnum | None
         The type of entity described by a name
     nameIdentifier: str | None
         A globally unique persistent identifier for an entity (e.g., ORCID iD, ROR ID).
@@ -67,7 +69,7 @@ class Entity(BaseModel):
 
     entity_id: str | None
     name: str
-    nameType: NameTypeEnum
+    nameType: NameTypeEnum | None
     nameIdentifier: str | None
     email: str | None
 
