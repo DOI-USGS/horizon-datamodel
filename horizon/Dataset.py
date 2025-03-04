@@ -97,7 +97,7 @@ class RelatedIdentifier(BaseModel):
         Description of the relationship of the resource being described and the related resource.
     relatedIdentifier: str
         The identifier of the related resource.
-    primaryRelatedIdentifier: bool
+    isPrimaryRelatedIdentifier: bool
         An indication if the related resource was developed alongside the cataloged resource and thus critical to the complete understanding of the cataloged resource.
     relatedIdentifierType: RelatedIdentifierTypeEnum
         The type of related identifier.
@@ -105,7 +105,7 @@ class RelatedIdentifier(BaseModel):
 
     dataciteRelationType: DataciteRelationTypeEnum
     relatedIdentifier: str
-    primaryRelatedIdentifier: bool  # Should we get rid of this?
+    isPrimaryRelatedIdentifier: bool  # Should we get rid of this?
     relatedIdentifierType: RelatedIdentifierTypeEnum
 
 
@@ -217,7 +217,7 @@ class Component(BaseModel):
     usgsCitation: str
         The recommended citation for the component.
         In most cases this citation will be the same as the Dataset citation
-    catalogRecord: bool
+    isCatalogRecord: bool
         Boolean indication if the metadata should be cataloged independently from the Dataset
     distribution: list[Distribution]
         An available distribution of the component.
@@ -229,7 +229,7 @@ class Component(BaseModel):
     title: str
     description: str
     usgsCitation: str
-    catalogRecord: bool
+    isCatalogRecord: bool
     distribution: list[Distribution]
     alternateIdentifier: AlternateIdentifier | None
 
