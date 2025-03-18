@@ -45,6 +45,10 @@ class Distribution(BaseModel):
         If IANA Media Type is available mediaType property should be used.
     mediaType: str
         Must be from https://www.iana.org/assignments/media-types/media-types.xhtml
+    conformsTo: HttpUrl
+        An established standard to which the distribution conforms. 
+        Used to indicate the model, schema, ontology, view or profile that this 
+        representation of a dataset conforms to.
     downloadURL: HttpUrl
         The URL of the downloadable file in a given format.
     accessURL: HttpUrl
@@ -67,6 +71,7 @@ class Distribution(BaseModel):
     description: str | None
     format: str | None
     mediaType: str | None
+    conformsTo: HttpUrl | None
     downloadURL: HttpUrl | None
     accessURL: HttpUrl | None
     byteSize: int | None
