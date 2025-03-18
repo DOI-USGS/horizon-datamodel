@@ -49,6 +49,7 @@ class Distribution(BaseModel):
         An established standard to which the distribution conforms. 
         Used to indicate the model, schema, ontology, view or profile that this 
         representation of a dataset conforms to.
+        Example: "https://www.fgdc.gov/schemas/metadata/"
     downloadURL: HttpUrl
         The URL of the downloadable file in a given format.
     accessURL: HttpUrl
