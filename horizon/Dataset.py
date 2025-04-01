@@ -147,6 +147,10 @@ class PeriodOfTime(BaseModel):
 
     The interval can be open. For example, it can have just a start or just an end.
 
+    In DCAT, temporal must be a string with two iso-8601 datetimes separated by
+    '/'. We retain a list here and defer the conversion to DCAT's preference in
+    the serialization.
+
     Fields
     ------
     startDate: datetime | None
@@ -266,7 +270,7 @@ class Dataset(CatalogedResource):
         A keyword or tag describing the resource.
     spatial: Location | None
         The geographical area covered by the dataset.
-    temporal: list[PeriodOfTime] | None
+    temporal: PeriodOfTime | None
         The temporal period that the dataset covers.
     relation: list[RelatedIdentifier] | None
         A resource with a relationship to the cataloged resource.
@@ -297,8 +301,7 @@ class Dataset(CatalogedResource):
     component: list[Component]
     keyword: list[Keyword] | None
     spatial: Location | None
-    # I'm not sure if PeriodOfTime can actually be a list in DCAT
-    temporal: list[PeriodOfTime] | None  
+    temporal: PeriodOfTime | None
     relation: list[RelatedIdentifier] | None
     alternateIdentifier: list[AlternateIdentifier] | None
     usgsPurpose: str | None
