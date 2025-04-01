@@ -21,7 +21,7 @@ class Keyword(BaseModel):
     """
 
     concept: str
-    conceptScheme: str = None
+    conceptScheme: str | None
     conceptUri: HttpUrl | None
 
 
