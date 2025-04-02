@@ -16,13 +16,13 @@ class Keyword(BaseModel):
         The keyword or tag
     conceptScheme: str = None
         The name of the scheme or classification code or authority (e.g., USGS Thesaurus)
-    conceptUri: HttpUrl | None
+    conceptUri: HttpUrl | None = None
         The URI of the concept
     """
 
     concept: str
-    conceptScheme: str | None
-    conceptUri: HttpUrl | None
+    conceptScheme: str | None = None
+    conceptUri: HttpUrl | None = None
 
 
 class DataciteRelationTypeEnum(str, Enum):
@@ -153,14 +153,14 @@ class PeriodOfTime(BaseModel):
 
     Fields
     ------
-    startDate: datetime | None
+    startDate: datetime | None = None
         The start of the period.
-    endDate: datetime | None
+    endDate: datetime | None = None
         The end of the period
     """
 
-    startDate: datetime | None
-    endDate: datetime | None
+    startDate: datetime | None = None
+    endDate: datetime | None = None
 
 
 class UsgsDataSource(BaseModel):
@@ -191,17 +191,17 @@ class VersionHistory(BaseModel):
     """Description of versions of the dataset described within a given identifier.
 
 
-    version: str | None
+    version: str | None = None
         The version indicator (name or identifier) of a resource.
-    issued: datetime | None
+    issued: datetime | None = None
         Date of formal issuance (e.g., publication) of the resource.
-    versionNotes: datetime | None
+    versionNotes: datetime | None = None
         A description of changes between this version and the previous version of the resource
     """
 
-    version: str | None
-    issued: datetime | None
-    versionNotes: datetime | None
+    version: str | None = None
+    issued: datetime | None = None
+    versionNotes: datetime | None = None
 
 
 class Component(BaseModel):
@@ -211,7 +211,7 @@ class Component(BaseModel):
 
     Fields
     ------
-    identifier: HttpUrl | None
+    identifier: HttpUrl | None = None
         A granular DOI used to identify the component that is different that the
         CatalogedResource's DOI
     title: str
@@ -225,17 +225,17 @@ class Component(BaseModel):
         Boolean indication if the metadata should be cataloged independently from the Dataset
     distribution: list[Distribution]
         An available distribution of the component.
-    alternateIdentifier: AlternateIdentifier | None
+    alternateIdentifier: AlternateIdentifier | None = None
         USGS Metadata PID
     """
 
-    identifier: HttpUrl | None
+    identifier: HttpUrl | None = None
     title: str
     description: str
     usgsCitation: str
     isCatalogRecord: bool
     distribution: list[Distribution]
-    alternateIdentifier: AlternateIdentifier | None
+    alternateIdentifier: AlternateIdentifier | None = None
 
 
 class Dataset(CatalogedResource):
@@ -245,7 +245,7 @@ class Dataset(CatalogedResource):
     ------
     issued: datetime
         Date of formal issuance (e.g., publication) of the resource.
-    modified: datetime | None
+    modified: datetime | None = None
         Most recent date on which the resource was changed, updated or modified.
     creator: Creator
         The entity responsible for producing the resource.
@@ -266,30 +266,30 @@ class Dataset(CatalogedResource):
     component: list[Component]
         A container for holding components or subsets of the overall Dataset
         that require additional metadata to be discovered and understood
-    keyword: list[Keyword] | None
+    keyword: list[Keyword] | None = None
         A keyword or tag describing the resource.
-    spatial: Location | None
+    spatial: Location | None = None
         The geographical area covered by the dataset.
-    temporal: PeriodOfTime | None
+    temporal: PeriodOfTime | None = None
         The temporal period that the dataset covers.
-    relation: list[RelatedIdentifier] | None
+    relation: list[RelatedIdentifier] | None = None
         A resource with a relationship to the cataloged resource.
         This property includes DCAT sub-properties hasPart, isReferencedBy, previousVersion, replaces.
-    alternateIdentifier: list[AlternateIdentifier] | None
+    alternateIdentifier: list[AlternateIdentifier] | None = None
         An identifier or identifiers other than the primary Identifier applied to the resource being registered.
-    usgsPurpose: str | None
+    usgsPurpose: str | None = None
         A summary of the intentions with which the resource was developed
-    usgsMissionArea: UsgsMissionArea | None
+    usgsMissionArea: UsgsMissionArea | None = None
         The USGS Mission Area responsible for managing the resource.
-    qualifiedAttribution: Contributor | None
+    qualifiedAttribution: Contributor | None = None
         Link to an Agent having some form of responsibility for the resource
-    versionHistory: VersionHistory | None
+    versionHistory: VersionHistory | None = None
         Description of versions of the dataset described within a given identifier.
     """
 
     issued: datetime
     # Adding modified here instead of under version as an optional field.
-    modified: datetime | None
+    modified: datetime | None = None
     creator: list[Creator]
     publisher: Entity
     usgsCitation: str
@@ -299,12 +299,12 @@ class Dataset(CatalogedResource):
     usgsDataSource: UsgsDataSource
     distribution: list[Distribution]
     component: list[Component]
-    keyword: list[Keyword] | None
-    spatial: Location | None
-    temporal: PeriodOfTime | None
-    relation: list[RelatedIdentifier] | None
-    alternateIdentifier: list[AlternateIdentifier] | None
-    usgsPurpose: str | None
-    usgsMissionArea: UsgsMissionArea | None
-    qualifiedAttribution: Contributor | None
-    versionHistory: VersionHistory | None
+    keyword: list[Keyword] | None = None
+    spatial: Location | None = None
+    temporal: PeriodOfTime | None = None
+    relation: list[RelatedIdentifier] | None = None
+    alternateIdentifier: list[AlternateIdentifier] | None = None
+    usgsPurpose: str | None = None
+    usgsMissionArea: UsgsMissionArea | None = None
+    qualifiedAttribution: Contributor | None = None
+    versionHistory: VersionHistory | None = None

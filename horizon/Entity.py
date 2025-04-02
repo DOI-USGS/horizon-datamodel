@@ -56,22 +56,22 @@ class Entity(BaseModel):
 
     Fields
     ------
-    entity_id: str | None
+    entity_id: str | None = None
         Identifier to uniquely identify an entity within a given system
     name: str
         Name by which an entity is known
-    nameType: NameTypeEnum | None
+    nameType: NameTypeEnum | None = None
         The type of entity described by a name
-    nameIdentifier: str | None
+    nameIdentifier: str | None = None
         A globally unique persistent identifier for an entity (e.g., ORCID iD, ROR ID).
 
     """
 
-    entity_id: str | None
+    entity_id: str | None = None
     name: str
-    nameType: NameTypeEnum | None
-    nameIdentifier: str | None
-    email: str | None
+    nameType: NameTypeEnum | None = None
+    nameIdentifier: str | None = None
+    email: str | None = None
 
 
 class Creator(Entity):
@@ -81,15 +81,15 @@ class Creator(Entity):
     ------
     position: int
         Position that the creator appears within a citation
-    affiliation: str | None
+    affiliation: str | None = None
         The organization with which a creator is affiliated
-    affiliationIdentifier: str | None
+    affiliationIdentifier: str | None = None
         A globally unique persistent identifier for the affiliated organization.
     """
 
     position: int
-    affiliation: str | None
-    affiliationIdentifier: str | None
+    affiliation: str | None = None
+    affiliationIdentifier: str | None = None
 
 
 class Contributor(Creator):
