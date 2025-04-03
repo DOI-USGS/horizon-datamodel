@@ -32,14 +32,14 @@ class Distribution(BaseModel):
 
     Fields
     ------
-    title: str | None
+    title: str | None = None
         User added free text description of the distribution.
         We could use this field for filename and description for user-provided free text
-    name: str | None
+    name: str | None = None
         filename for downloadable files
-    description: str | None
+    description: str | None = None
         Description of the type of distribution (e.g., Landing Page, Original Metadata, WMS Service)
-    format: str | None
+    format: str | None = None
         Should only be used if IANA Media Type is not available
         https://www.iana.org/assignments/media-types/media-types.xhtml
         If IANA Media Type is available mediaType property should be used.
@@ -54,9 +54,9 @@ class Distribution(BaseModel):
         The URL of the downloadable file in a given format.
     accessURL: HttpUrl
         A URL of the resource that gives access to a distribution of the dataset.
-    byteSize: int | None
+    byteSize: int | None = None
         The size of a distribution in bytes.
-    checksum: Checksum | None
+    checksum: Checksum | None = None
         Checksum value and algorithm that enables integrity checks of the contents of a file.
     modifiedBy: Entity
         The person or service that last modified the distribution information or uploaded the file.
@@ -67,16 +67,16 @@ class Distribution(BaseModel):
         We may need a special preview class to make this work
     """
 
-    title: str | None
-    name: str | None
-    description: str | None
-    format: str | None
-    mediaType: str | None
-    conformsTo: HttpUrl | None
-    downloadURL: HttpUrl | None
-    accessURL: HttpUrl | None
-    byteSize: int | None
-    checksum: Checksum | None
+    title: str | None = None
+    name: str | None = None
+    description: str | None = None
+    format: str | None = None
+    mediaType: str | None = None
+    conformsTo: HttpUrl | None = None
+    downloadURL: HttpUrl | None = None
+    accessURL: HttpUrl | None = None
+    byteSize: int | None = None
+    checksum: Checksum | None = None
     modifiedBy: Entity
     modified: datetime
     useForPreview: bool

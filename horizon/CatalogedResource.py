@@ -31,7 +31,7 @@ class CatalogedResource(BaseModel):
         Date and time that the resource's record was created in the catalog
     usgsModified: datetime
         Date and time that the resource's record was last modified
-    identifier: HttpUrl | None
+    identifier: HttpUrl | None = None
         A unique identifier of the resource being described or cataloged.
         This identifier should be represented by a URI.
     usgsIdentifier: str
@@ -46,6 +46,6 @@ class CatalogedResource(BaseModel):
     description: str
     usgsCreated: datetime
     usgsModified: datetime
-    identifier: HttpUrl | None
+    identifier: HttpUrl | None = None
     usgsIdentifier: str
     accessRights: AccessRightsEnum

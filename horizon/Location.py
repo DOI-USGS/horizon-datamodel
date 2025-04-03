@@ -53,5 +53,5 @@ class Location(BaseModel):
         The longitude and latitude coordinates of the Location's centroid
     """
 
-    bbox: BoundingBox | None
-    centroid: Centroid | None
+    bbox: BoundingBox | None = None
+    centroid: Centroid | None = None
