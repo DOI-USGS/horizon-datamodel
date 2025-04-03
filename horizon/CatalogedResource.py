@@ -21,31 +21,26 @@ class CatalogedResource(BaseModel):
 
     Fields
     ------
-    title: str
-        A name given to the resource.
-    usgsAssetType: UsgsAssetTypeEnum
-        The type of asset cataloged: data, model, publication, software
-    description: str
-        A free-text account of the resource.
-    usgsCreated: datetime
-        Date and time that the resource's record was created in the catalog
-    usgsModified: datetime
-        Date and time that the resource's record was last modified
-    identifier: HttpUrl | None = None
-        A unique identifier of the resource being described or cataloged.
-        This identifier should be represented by a URI.
-    usgsIdentifier: str
-        Identifier used to internally identify a resource within a particular system
-    accessRights: AccessRightsEnum
-        Information about who can access the resource or an indication of its security status.
+    title: A name given to the resource.
+    usgsAssetType: The type of asset cataloged: data, model, publication, software
+    description: A free-text account of the resource.
+    usgsCreated: Date and time that the resource's record was created in the catalog
+    usgsModified: Date and time that the resource's record was last modified
+    identifier: A unique identifier of the resource being described or
+        cataloged. This identifier should be represented by a URI.
+    usgsIdentifier: Identifier used to internally identify a resource within a
+        particular system
+    accessRights: Information about who can access the resource or an
+        indication of its security status.
 
     """
-
+    usgsIdentifier: str
+    identifier: HttpUrl | None = None
     title: str
     usgsAssetType: UsgsAssetTypeEnum
-    description: str
+
     usgsCreated: datetime
     usgsModified: datetime
-    identifier: HttpUrl | None = None
-    usgsIdentifier: str
+
+    description: str
     accessRights: AccessRightsEnum

@@ -12,12 +12,10 @@ from .Location import Location
 
 class Keyword(BaseModel):
     """A keyword or tag describing the resource.
-    concept: str
-        The keyword or tag
-    conceptScheme: str = None
-        The name of the scheme or classification code or authority (e.g., USGS Thesaurus)
-    conceptUri: HttpUrl | None = None
-        The URI of the concept
+    concept: The keyword or tag
+    conceptScheme: The name of the scheme or classification code or authority
+        (e.g., USGS Thesaurus)
+    conceptUri: The URI of the concept
     """
 
     concept: str
@@ -93,14 +91,13 @@ class RelatedIdentifier(BaseModel):
 
     Fields
     ------
-    dataciteRelationType: DataciteRelationTypeEnum
-        Description of the relationship of the resource being described and the related resource.
-    relatedIdentifier: str
-        The identifier of the related resource.
-    isPrimaryRelatedIdentifier: bool
-        An indication if the related resource was developed alongside the cataloged resource and thus critical to the complete understanding of the cataloged resource.
-    relatedIdentifierType: RelatedIdentifierTypeEnum
-        The type of related identifier.
+    dataciteRelationType: Description of the relationship of the resource being
+        described and the related resource.
+    relatedIdentifier: The identifier of the related resource.
+    isPrimaryRelatedIdentifier: An indication if the related resource was
+        developed alongside the cataloged resource and thus critical to the
+        complete understanding of the cataloged resource.
+    relatedIdentifierType: The type of related identifier.
     """
 
     dataciteRelationType: DataciteRelationTypeEnum
@@ -132,10 +129,9 @@ class AlternateIdentifier(BaseModel):
 
     Fields
     ------
-    identifier: str
-        An identifier or identifiers other than the primary Identifier applied to the resource being registered.
-    identifierType: AlternateIdentifierTypeEnum
-        The type of alternate identifier
+    identifier: An identifier or identifiers other than the primary Identifier
+        applied to the resource being registered.
+    identifierType: The type of alternate identifier
     """
 
     identifier: str
@@ -153,10 +149,8 @@ class PeriodOfTime(BaseModel):
 
     Fields
     ------
-    startDate: datetime | None = None
-        The start of the period.
-    endDate: datetime | None = None
-        The end of the period
+    startDate: The start of the period.
+    endDate: The end of the period.
     """
 
     startDate: datetime | None = None
@@ -179,8 +173,6 @@ class UsgsMissionArea(BaseModel):
     """The USGS Mission Area responsible for managing the resource.
 
     The Mission Area name and ID should come from Gluebucket service.
-    name: str
-    missionAreaId: str
     """
 
     name: str
@@ -191,12 +183,10 @@ class VersionHistory(BaseModel):
     """Description of versions of the dataset described within a given identifier.
 
 
-    version: str | None = None
-        The version indicator (name or identifier) of a resource.
-    issued: datetime | None = None
-        Date of formal issuance (e.g., publication) of the resource.
-    versionNotes: datetime | None = None
-        A description of changes between this version and the previous version of the resource
+    version: The version indicator (name or identifier) of a resource.
+    issued: Date of formal issuance (e.g., publication) of the resource.
+    versionNotes: A description of changes between this version and the
+        previous version of the resource
     """
 
     version: str | None = None
@@ -211,22 +201,16 @@ class Component(BaseModel):
 
     Fields
     ------
-    identifier: HttpUrl | None = None
-        A granular DOI used to identify the component that is different that the
-        CatalogedResource's DOI
-    title: str
-        Name given to the component
-    description: str
-        Free-text description of the component
-    usgsCitation: str
-        The recommended citation for the component.
-        In most cases this citation will be the same as the Dataset citation
-    isCatalogRecord: bool
-        Boolean indication if the metadata should be cataloged independently from the Dataset
-    distribution: list[Distribution]
-        An available distribution of the component.
-    alternateIdentifier: AlternateIdentifier | None = None
-        USGS Metadata PID
+    identifier: A granular DOI used to identify the component that is different
+        that the CatalogedResource's DOI
+    title: Name given to the component
+    description: Free-text description of the component
+    usgsCitation: The recommended citation for the component. In most cases
+        this citation will be the same as the Dataset citation
+    isCatalogRecord: Boolean indication if the metadata should be cataloged
+        independently from the Dataset
+    distribution: An available distribution of the component.
+    alternateIdentifier: USGS Metadata PID
     """
 
     identifier: HttpUrl | None = None
@@ -243,68 +227,59 @@ class Dataset(CatalogedResource):
 
     Fields
     ------
-    issued: datetime
-        Date of formal issuance (e.g., publication) of the resource.
-    modified: datetime | None = None
-        Most recent date on which the resource was changed, updated or modified.
-    creator: Creator
-        The entity responsible for producing the resource.
-    publisher: Entity
-        The entity responsible for making the resource available.
-    usgsCitation: str
-        The recommended citation for the resource.
-    contactPoint: Entity
-        Relevant contact information for the cataloged resource.
-    usgsMetadataContactPoint: Entity
-        The entity responsible for creating and maintaining the metadata for the resource.
-    license: License
-        A legal document under which the resource is made available.
-    usgsDataSource: UsgsDataSource
-        The USGS Science Center or Program responsible for managing the resource.
-    distribution: list[Distribution]
-        An available distribution of the dataset.
-    component: list[Component]
-        A container for holding components or subsets of the overall Dataset
-        that require additional metadata to be discovered and understood
-    keyword: list[Keyword] | None = None
-        A keyword or tag describing the resource.
-    spatial: Location | None = None
-        The geographical area covered by the dataset.
-    temporal: PeriodOfTime | None = None
-        The temporal period that the dataset covers.
-    relation: list[RelatedIdentifier] | None = None
-        A resource with a relationship to the cataloged resource.
-        This property includes DCAT sub-properties hasPart, isReferencedBy, previousVersion, replaces.
-    alternateIdentifier: list[AlternateIdentifier] | None = None
-        An identifier or identifiers other than the primary Identifier applied to the resource being registered.
-    usgsPurpose: str | None = None
-        A summary of the intentions with which the resource was developed
-    usgsMissionArea: UsgsMissionArea | None = None
-        The USGS Mission Area responsible for managing the resource.
-    qualifiedAttribution: Contributor | None = None
-        Link to an Agent having some form of responsibility for the resource
-    versionHistory: VersionHistory | None = None
-        Description of versions of the dataset described within a given identifier.
+    issued: Date of formal issuance (e.g., publication) of the resource.
+    modified: Most recent date on which the resource was changed, updated or modified.
+    creator: The entity responsible for producing the resource.
+    publisher: The entity responsible for making the resource available.
+    usgsCitation: The recommended citation for the resource.
+    contactPoint: Relevant contact information for the cataloged resource.
+    usgsMetadataContactPoint: The entity responsible for creating and
+        maintaining the metadata for the resource.
+    license: A legal document under which the resource is made available.
+    usgsDataSource: The USGS Science Center or Program responsible for managing
+        the resource.
+    distribution: An available distribution of the dataset.
+    component: A container for holding components or subsets of the overall
+        Dataset that require additional metadata to be discovered and understood.
+    keyword: A keyword or tag describing the resource.
+    spatial: The geographical area covered by the dataset.
+    temporal: The temporal period that the dataset covers.
+    relation: A resource with a relationship to the cataloged resource. This
+        property includes DCAT sub-properties hasPart, isReferencedBy,
+        previousVersion, replaces.
+    alternateIdentifier: An identifier or identifiers other than the primary
+        Identifier applied to the resource being registered.
+    usgsPurpose: A summary of the intentions with which the resource was developed
+    usgsMissionArea: The USGS Mission Area responsible for managing the resource.
+    qualifiedAttribution: Link to an Agent having some form of responsibility
+        for the resource
+    versionHistory: Description of versions of the dataset described within a
+        given identifier.
     """
-
-    issued: datetime
-    # Adding modified here instead of under version as an optional field.
-    modified: datetime | None = None
-    creator: list[Creator]
-    publisher: Entity
     usgsCitation: str
+
+    issued: datetime  # pubdate aka publication date
+    modified: datetime | None = None
+    temporal: PeriodOfTime | None = None
+
+    # Contacts / Entities
+    creator: list[Creator]
     contactPoint: Entity
     usgsMetadataContactPoint: Entity
-    license: License
     usgsDataSource: UsgsDataSource
-    distribution: list[Distribution]
-    component: list[Component]
-    keyword: list[Keyword] | None = None
-    spatial: Location | None = None
-    temporal: PeriodOfTime | None = None
-    relation: list[RelatedIdentifier] | None = None
-    alternateIdentifier: list[AlternateIdentifier] | None = None
-    usgsPurpose: str | None = None
     usgsMissionArea: UsgsMissionArea | None = None
     qualifiedAttribution: Contributor | None = None
+    publisher: Entity
+
+    # Resource Access
+    distribution: list[Distribution]
+    component: list[Component]
+
+    # Additional descriptors
+    license: License
+    usgsPurpose: str | None = None
+    keyword: list[Keyword] | None = None
+    spatial: Location | None = None
+    relation: list[RelatedIdentifier] | None = None
+    alternateIdentifier: list[AlternateIdentifier] | None = None
     versionHistory: VersionHistory | None = None

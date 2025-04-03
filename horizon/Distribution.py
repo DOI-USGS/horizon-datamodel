@@ -16,10 +16,9 @@ class Checksum(BaseModel):
 
     Fields
     ------
-    algorithm: str
-        Identifies the algorithm used to produce the subject Checksum (should use SPDX)
-    checksumValue: str
-        The checksumValue property provides a lowercase hexadecimal
+    algorithm: Identifies the algorithm used to produce the subject Checksum
+        (should use SPDX)
+    checksumValue: The checksumValue property provides a lowercase hexadecimal
         encoded digest value produced using a specific algorithm
     """
 
@@ -32,39 +31,29 @@ class Distribution(BaseModel):
 
     Fields
     ------
-    title: str | None = None
-        User added free text description of the distribution.
-        We could use this field for filename and description for user-provided free text
-    name: str | None = None
-        filename for downloadable files
-    description: str | None = None
-        Description of the type of distribution (e.g., Landing Page, Original Metadata, WMS Service)
-    format: str | None = None
-        Should only be used if IANA Media Type is not available
+    title: User added free text description of the distribution. We could use
+        this field for filename and description for user-provided free text
+    name: filename for downloadable files
+    description: Description of the type of distribution (e.g., Landing Page,
+        Original Metadata, WMS Service)
+    format: Should only be used if IANA Media Type is not available
         https://www.iana.org/assignments/media-types/media-types.xhtml
         If IANA Media Type is available mediaType property should be used.
-    mediaType: str
-        Must be from https://www.iana.org/assignments/media-types/media-types.xhtml
-    conformsTo: HttpUrl
-        An established standard to which the distribution conforms. 
-        Used to indicate the model, schema, ontology, view or profile that this 
+    mediaType: Must be from https://www.iana.org/assignments/media-types/media-types.xhtml
+    conformsTo: An established standard to which the distribution conforms.
+        Used to indicate the model, schema, ontology, view or profile that this
         representation of a dataset conforms to.
         Example: "https://www.fgdc.gov/schemas/metadata/"
-    downloadURL: HttpUrl
-        The URL of the downloadable file in a given format.
-    accessURL: HttpUrl
-        A URL of the resource that gives access to a distribution of the dataset.
-    byteSize: int | None = None
-        The size of a distribution in bytes.
-    checksum: Checksum | None = None
-        Checksum value and algorithm that enables integrity checks of the contents of a file.
-    modifiedBy: Entity
-        The person or service that last modified the distribution information or uploaded the file.
-    modified: datetime
-        The timestamp of when the distribution was last modified
-    useForPreview: bool
-        Boolean indication if an image file should be used as a preview image
-        We may need a special preview class to make this work
+    downloadURL: The URL of the downloadable file in a given format.
+    accessURL: A URL of the resource that gives access to a distribution of the dataset.
+    byteSize: The size of a distribution in bytes.
+    checksum: Checksum value and algorithm that enables integrity checks of the
+        contents of a file.
+    modifiedBy: The person or service that last modified the distribution
+        information or uploaded the file.
+    modified: The timestamp of when the distribution was last modified
+    useForPreview: Boolean indication if an image file should be used as a
+        preview image. We may need a special preview class to make this work.
     """
 
     title: str | None = None

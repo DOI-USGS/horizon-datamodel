@@ -56,14 +56,11 @@ class Entity(BaseModel):
 
     Fields
     ------
-    entity_id: str | None = None
-        Identifier to uniquely identify an entity within a given system
-    name: str
-        Name by which an entity is known
-    nameType: NameTypeEnum | None = None
-        The type of entity described by a name
-    nameIdentifier: str | None = None
-        A globally unique persistent identifier for an entity (e.g., ORCID iD, ROR ID).
+    entity_id: Identifier to uniquely identify an entity within a given system
+    name: Name by which an entity is known
+    nameType: The type of entity described by a name
+    nameIdentifier: A globally unique persistent identifier for an entity
+        (e.g., ORCID iD, ROR ID).
 
     """
 
@@ -79,12 +76,10 @@ class Creator(Entity):
 
     Fields
     ------
-    position: int
-        Position that the creator appears within a citation
-    affiliation: str | None = None
-        The organization with which a creator is affiliated
-    affiliationIdentifier: str | None = None
-        A globally unique persistent identifier for the affiliated organization.
+    position: Position that the creator appears within a citation
+    affiliation: The organization with which a creator is affiliated
+    affiliationIdentifier: A globally unique persistent identifier for the
+        affiliated organization.
     """
 
     position: int
@@ -98,8 +93,7 @@ class Contributor(Creator):
 
     Fields
     ------
-    contributorType: ContributorTypeEnum
-        The type of contributor of the resource.
+    contributorType: The type of contributor of the resource.
     """
 
     contributorType: ContributorTypeEnum
