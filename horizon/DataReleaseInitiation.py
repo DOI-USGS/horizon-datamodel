@@ -78,7 +78,7 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
     usgsCreated: datetime = datetime.now()
     usgsModified: datetime = datetime.now()
-    identifier: HttpUrl
+    identifier: HttpUrl | None = None
     usgsIdentifier: str
     accessRights: AccessRightsEnum = AccessRightsEnum.public
     publisher: Entity = Entity(
