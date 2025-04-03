@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 
 from pydantic import BaseModel, HttpUrl
@@ -153,8 +153,8 @@ class PeriodOfTime(BaseModel):
     endDate: The end of the period.
     """
 
-    startDate: datetime | None = None
-    endDate: datetime | None = None
+    startDate: date | None = None
+    endDate: date | None = None
 
 
 class UsgsDataSource(BaseModel):
@@ -191,7 +191,7 @@ class VersionHistory(BaseModel):
 
     version: str | None = None
     issued: datetime | None = None
-    versionNotes: datetime | None = None
+    versionNotes: str | None = None
 
 
 class Component(BaseModel):
@@ -204,9 +204,9 @@ class Component(BaseModel):
     identifier: A granular DOI used to identify the component that is different
         that the CatalogedResource's DOI
     title: Name given to the component
-    description: Free-text description of the component
     usgsCitation: The recommended citation for the component. In most cases
         this citation will be the same as the Dataset citation
+    description: Free-text description of the component
     isCatalogRecord: Boolean indication if the metadata should be cataloged
         independently from the Dataset
     distribution: An available distribution of the component.
@@ -215,11 +215,11 @@ class Component(BaseModel):
 
     identifier: HttpUrl | None = None
     title: str
-    description: str
     usgsCitation: str
-    isCatalogRecord: bool
+    description: str
     distribution: list[Distribution]
     alternateIdentifier: AlternateIdentifier | None = None
+    isCatalogRecord: bool
 
 
 class Dataset(CatalogedResource):
@@ -227,38 +227,42 @@ class Dataset(CatalogedResource):
 
     Fields
     ------
+    usgsCitation: The recommended citation for the resource.
+    
     issued: Date of formal issuance (e.g., publication) of the resource.
     modified: Most recent date on which the resource was changed, updated or modified.
+    temporal: The temporal period that the dataset covers.
+
     creator: The entity responsible for producing the resource.
-    publisher: The entity responsible for making the resource available.
-    usgsCitation: The recommended citation for the resource.
     contactPoint: Relevant contact information for the cataloged resource.
     usgsMetadataContactPoint: The entity responsible for creating and
         maintaining the metadata for the resource.
-    license: A legal document under which the resource is made available.
     usgsDataSource: The USGS Science Center or Program responsible for managing
         the resource.
+    usgsMissionArea: The USGS Mission Area responsible for managing the resource.
+    qualifiedAttribution: Link to an Agent having some form of responsibility
+        for the resource
+    publisher: The entity responsible for making the resource available.
+    
     distribution: An available distribution of the dataset.
     component: A container for holding components or subsets of the overall
         Dataset that require additional metadata to be discovered and understood.
+
+    license: A legal document under which the resource is made available.
+    usgsPurpose: A summary of the intentions with which the resource was developed
     keyword: A keyword or tag describing the resource.
     spatial: The geographical area covered by the dataset.
-    temporal: The temporal period that the dataset covers.
     relation: A resource with a relationship to the cataloged resource. This
         property includes DCAT sub-properties hasPart, isReferencedBy,
         previousVersion, replaces.
     alternateIdentifier: An identifier or identifiers other than the primary
         Identifier applied to the resource being registered.
-    usgsPurpose: A summary of the intentions with which the resource was developed
-    usgsMissionArea: The USGS Mission Area responsible for managing the resource.
-    qualifiedAttribution: Link to an Agent having some form of responsibility
-        for the resource
     versionHistory: Description of versions of the dataset described within a
         given identifier.
     """
     usgsCitation: str
 
-    issued: datetime  # pubdate aka publication date
+    issued: date  # pubdate aka publication date
     modified: datetime | None = None
     temporal: PeriodOfTime | None = None
 
