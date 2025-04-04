@@ -140,7 +140,7 @@ class AlternateIdentifier(BaseModel):
 
 class PeriodOfTime(BaseModel):
     """An interval of time that is named or defined by its start and end dates.
-
+    Or a single date.
     The interval can be open. For example, it can have just a start or just an end.
 
     In DCAT, temporal must be a string with two iso-8601 datetimes separated by
@@ -151,18 +151,18 @@ class PeriodOfTime(BaseModel):
     ------
     startDate: The start of the period.
     endDate: The end of the period.
+    singleDate: A single date.
     """
 
     startDate: date | None = None
     endDate: date | None = None
-
+    singleDate: date | None = None
+    
 
 class UsgsDataSource(BaseModel):
     """The USGS Science Center or Program responsible for managing the resource.
 
     The name and dataSourceId should come from Gluebucket.
-    name: str
-    dataSourceId: str
     """
 
     name: str
@@ -228,7 +228,7 @@ class Dataset(CatalogedResource):
     Fields
     ------
     usgsCitation: The recommended citation for the resource.
-    
+
     issued: Date of formal issuance (e.g., publication) of the resource.
     modified: Most recent date on which the resource was changed, updated or modified.
     temporal: The temporal period that the dataset covers.
@@ -243,7 +243,7 @@ class Dataset(CatalogedResource):
     qualifiedAttribution: Link to an Agent having some form of responsibility
         for the resource
     publisher: The entity responsible for making the resource available.
-    
+
     distribution: An available distribution of the dataset.
     component: A container for holding components or subsets of the overall
         Dataset that require additional metadata to be discovered and understood.
@@ -262,7 +262,7 @@ class Dataset(CatalogedResource):
     """
     usgsCitation: str
 
-    issued: date  # pubdate aka publication date
+    issued: date
     modified: datetime | None = None
     temporal: PeriodOfTime | None = None
 
