@@ -6,21 +6,17 @@ class BoundingBox(BaseModel):
 
     Fields
     ------
-    westBoundLongitude: float
-        Western longitudinal dimension of the bounding box: -180 -180
-    eastBoundLongitude: float
-        Eastern longitudinal dimension of the bounding box: -180 -180
-    southBoundLatitude: float
-        Southern latitudinal dimensions of the bounding box: -90 -90
-    northBoundLatitude: float
-        Northern latitudinal dimensions of the bounding box: -90 -90
+    westBoundLongitude: Western longitudinal dimension of the bounding box: -180 to 180
+    eastBoundLongitude: Eastern longitudinal dimension of the bounding box: -180 to 180
+    southBoundLatitude: Southern latitudinal dimensions of the bounding box: -90 to 90
+    northBoundLatitude: Northern latitudinal dimensions of the bounding box: -90 to 90
 
     """
 
-    westBoundLongitude: float
-    eastBoundLongitude: float
-    southBoundLatitude: float
-    northBoundLatitude: float
+    westBoundLongitude: str
+    eastBoundLongitude: str
+    southBoundLatitude: str
+    northBoundLatitude: str
 
 
 class Centroid(BaseModel):
@@ -28,16 +24,13 @@ class Centroid(BaseModel):
 
     Fields
     ------
-    point_longitude: float
-        Longitude decimal degrees: -180 -180
-
-    point_latitude: float
-        Latitude decimal degrees: -90 -90
+    point_longitude: Longitude decimal degrees: -180 to 180
+    point_latitude: Latitude decimal degrees: -90 to 90
 
     """
 
-    pointLongitude: float
-    pointLatitude: float
+    pointLongitude: str
+    pointLatitude: str
 
 
 class Location(BaseModel):
@@ -47,10 +40,8 @@ class Location(BaseModel):
     ------
     geometry: Geometry
         Not included in initial schema. Could be added in the future
-    bbox: BoundingBox
-        The spatial limits of a bounding box.
-    centroid: Centroid
-        The longitude and latitude coordinates of the Location's centroid
+    bbox: The spatial limits of a bounding box.
+    centroid: The longitude and latitude coordinates of the Location's centroid
     """
 
     bbox: BoundingBox | None = None
