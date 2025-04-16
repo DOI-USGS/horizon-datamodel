@@ -191,6 +191,7 @@ class VersionHistory(BaseModel):
 
     version: str | None = None
     issued: datetime | None = None
+    approvalIdentifier: str | None = None
     versionNotes: str | None = None
 
 

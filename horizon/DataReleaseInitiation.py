@@ -18,26 +18,19 @@ class DataReleaseInitiationForm(BaseModel):
 
     Fields
     ------
-    title: str
-        A name given to the resource.
-    creator: Creator
-        The entity responsible for producing the resource.
-    license: License
-        A legal document under which the resource is made available.
-    usgsDataSource: UsgsDataSource
-        The USGS Science Center or Program responsible for managing the resource.
-    usgsMissionArea: UsgsMissionArea | None
-        The USGS Mission Area responsible for managing the resource.
-    relation: list[RelatedIdentifier] | None
-        A resource with a relationship to the cataloged resource.
+    usgsApprovalIdentifier: The identifier associated with the original record of approval for the data release.
+    title: A name given to the resource.
+    creator: The entity responsible for producing the resource.
+    license: A legal document under which the resource is made available.
+    usgsDataSource: The USGS Science Center or Program responsible for managing the resource.
+    usgsMissionArea: The USGS Mission Area responsible for managing the resource.
+    relation: A resource with a relationship to the cataloged resource.
         This property includes DCAT sub-properties hasPart, isReferencedBy, previousVersion, replaces.
-    alternateIdentifier: list[AlternateIdentifier] | None
-        An identifier or identifiers other than the primary Identifier applied to the resource being registered.
-    qualifiedAttribution: Contributor | None
-        Link to an Agent having some form of responsibility for the resource
-    versionHistory: VersionHistory | None
-        Description of versions of the dataset described within a given identifier.
+    alternateIdentifier: An identifier or identifiers other than the primary Identifier applied to the resource being registered.
+    qualifiedAttribution: Link to an Agent having some form of responsibility for the resource
+    versionHistory: Description of versions of the dataset described within a given identifier.
     """
+    usgsApprovalIdentifier: str
     title: str
     creator: list[Creator]
     license: License
@@ -55,23 +48,15 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     Fields
     ------
     
-    usgsAssetType: UsgsAssetTypeEnum
-        The type of asset cataloged: data, model, publication, software
-    usgsCreated: datetime
-        Date and time that the resource's record was created in the catalog
-    usgsModified: datetime
-        Date and time that the resource's record was last modified
-    identifier: HttpUrl
-        A unique identifier of the resource being described or cataloged.
+    usgsAssetType: The type of asset cataloged: data, model, publication, software
+    usgsCreated: Date and time that the resource's record was created in the catalog
+    usgsModified: Date and time that the resource's record was last modified
+    identifier: A unique identifier of the resource being described or cataloged.
         This identifier should be represented by a URI.
-    usgsIdentifier: str
-        Identifier used to internally identify a resource within a particular system
-    accessRights: AccessRightsEnum
-        Information about who can access the resource or an indication of its security status.
-    publisher: Entity
-        The entity responsible for making the resource available.
-    distribution: list[Distribution]
-        An available distribution of the dataset.
+    usgsIdentifier: Identifier used to internally identify a resource within a particular system
+    accessRights: Information about who can access the resource or an indication of its security status.
+    publisher: The entity responsible for making the resource available.
+    distribution: An available distribution of the dataset.
     
     """
     
