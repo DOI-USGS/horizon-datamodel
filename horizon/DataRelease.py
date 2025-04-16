@@ -56,10 +56,12 @@ class UsgsReleaseTypeEnum(str, Enum):
 class DataRelease(Dataset):
     """Class that extends Dataset to include properties necessary for curating data within a data repository.
 
+    usgsApprovalIdentifier: The identifier associated with the original record of approval for the data release.
     status: The status of a data release within the curation process.
     usgsReleaseType: The type of release. Different types of releases fall
         under different USGS policy requirements.
     """
 
+    usgsApprovalIdentifier: str
     status: StatusEnum = "Created"
     usgsReleaseType: UsgsReleaseTypeEnum = "Data Release"
