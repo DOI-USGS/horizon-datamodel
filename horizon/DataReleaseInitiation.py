@@ -1,19 +1,73 @@
 from datetime import datetime
 from enum import Enum
 import os
+import urllib
 
-from pydantic import BaseModel, HttpUrl
+import pydantic
 
 from .CatalogedResource import UsgsAssetTypeEnum, AccessRightsEnum
-from .Dataset import UsgsDataSource, UsgsMissionArea, VersionHistory, RelatedIdentifier, AlternateIdentifier
-from .License import License
-from .Entity import Entity, Creator, Contributor
-from .Distribution import Distribution
 from .DataRelease import StatusEnum, UsgsReleaseTypeEnum
+from .Dataset import UsgsDataSource, UsgsMissionArea, VersionHistory, RelatedIdentifier, AlternateIdentifier
+from .Distribution import Distribution
+from .Entity import Entity, Creator, Contributor
+from .License import License
+
 
 COLLECTION_ID = os.getenv("GLOBUS_COLLECTION_ID", "0be095a6-c4e9-4db2-aec0-3310f11dddc7")
 
-class DataReleaseInitiationForm(BaseModel):
+
+def globus_access_url(usgsIdentifier: str) -> str:
+    """
+    Helper function which constructs globus collection access url from usgsIdentifier.
+
+    Example use:
+        usgsIdentifier = 'USGS:1234-5678-9012-3456'
+        globus_access_url(usgsIdentifier) == 'https://app.globus.org/file-manager?origin_id=0be095a6-c4e9-4db2-aec0-3310f11dddc7&origin_path=%2FUSGS%3A1234-5678-9012-3456&two_pane=false'
+    """
+    base = "https://app.globus.org/file-manager"
+    query = {
+        "origin_id": COLLECTION_ID,
+        "origin_path": "/" + usgsIdentifier,
+        "two_pane": "false",
+    }
+    query_string = "?" + urllib.parse.urlencode(query)
+    return urllib.parse.urljoin(base, query_string)
+
+
+def default_distribution(data: dict) -> list[Distribution]:
+    """
+    Default factory for DataReleaseInitiation.distribution
+    """
+    distribution = []
+
+    usgsIdentifier = data["usgsIdentifier"]
+    identifier = data.get("identifier")
+
+    if identifier:
+        distribution.append(
+            Distribution(
+                title="Data Release",
+                description="Data Release",
+                accessURL=pydantic.HttpUrl(identifier),
+                format="HTML",
+                mediaType="text/html",
+            )
+        )
+
+    distribution.append(
+        Distribution(
+            title="Globus Guest Collection",
+            description="Globus guest collection for accessing data via Globus transfer",
+            accessURL=pydantic.HttpUrl(globus_access_url(usgsIdentifier)),
+            format="HTML",
+            mediaType="text/html",
+        )
+    )
+
+    return distribution
+
+
+class DataReleaseInitiationForm(pydantic.BaseModel):
     """Basic metadata schema for user-required input for initiating and updating a data release.
 
     Fields
@@ -48,24 +102,28 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     Fields
     ------
     
+    usgsIdentifier: Identifier used to internally identify a resource within a particular system
+
+    identifier: A unique identifier of the resource being described or cataloged.
+        This identifier should be represented by a URI.
+
     usgsAssetType: The type of asset cataloged: data, model, publication, software
     usgsCreated: Date and time that the resource's record was created in the catalog
     usgsModified: Date and time that the resource's record was last modified
-    identifier: A unique identifier of the resource being described or cataloged.
-        This identifier should be represented by a URI.
-    usgsIdentifier: Identifier used to internally identify a resource within a particular system
     accessRights: Information about who can access the resource or an indication of its security status.
     publisher: The entity responsible for making the resource available.
     distribution: An available distribution of the dataset.
-    
     """
     
-    usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
-    usgsCreated: datetime = datetime.now()
-    usgsModified: datetime = datetime.now()
-    identifier: HttpUrl | None = None
     usgsIdentifier: str
+
+    identifier: pydantic.HttpUrl | None = None
+
+    usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
+    usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
     accessRights: AccessRightsEnum = AccessRightsEnum.public
+
     publisher: Entity = Entity(
         entity_id="https://ror.org/035a68863",
         name="United States Geological Survey",
@@ -74,24 +132,9 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
         email=None,
     )
     
-    distribution: list[Distribution] = [
-        Distribution(
-            title="Data Release",
-            description="Data Release",
-            accessURL=HttpUrl(identifier),
-            format="HTML",
-            mediaType="text/html"
-        ),
-        Distribution(
-            title="Globus Guest Collection",
-            description="Globus guest collection for accessing data via Globus transfer",
-            accessURL=HttpUrl(f"https://app.globus.org/file-manager?origin_id={COLLECTION_ID}&origin_path=%2F{usgsIdentifier}&two_pane=false"),
-            format="HTML",
-            mediaType="text/html"
-        )
-    ]
+    distribution: list[Distribution] = pydantic.Field(
+        default_factory=default_distribution,
+    )
     
     status: StatusEnum = StatusEnum.created
     usgsReleaseType: UsgsReleaseTypeEnum = UsgsReleaseTypeEnum.dataRelease
-
-
