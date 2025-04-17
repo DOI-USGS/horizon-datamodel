@@ -5,6 +5,7 @@ from pydantic import BaseModel, HttpUrl
 from .Dataset import PeriodOfTime, Location, Keyword
 from .Entity import Entity
 
+
 class DataReleaseCSDGM(BaseModel):
     """Basic metadata schema for information translated from a Content Standard for Digital Geospatial Metadata record.
 
@@ -26,9 +27,6 @@ class DataReleaseCSDGM(BaseModel):
     keyword: A keyword or tag describing the resource.
     spatial: The geographical area covered by the dataset.
 
-    
-
-
     """
     # Identification Information
     identifier: HttpUrl | None = None
@@ -47,4 +45,3 @@ class DataReleaseCSDGM(BaseModel):
     usgsPurpose: str | None = None
     keyword: list[Keyword] | None = None
     spatial: Location | None = None
-
