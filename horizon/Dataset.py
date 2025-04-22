@@ -129,13 +129,13 @@ class AlternateIdentifier(BaseModel):
 
     Fields
     ------
-    identifier: An identifier or identifiers other than the primary Identifier
+    alternateIdentifier: An identifier or identifiers other than the primary Identifier
         applied to the resource being registered.
-    identifierType: The type of alternate identifier
+    alternateIdentifierType: The type of alternate identifier
     """
 
-    identifier: str
-    identifierType: AlternateIdentifierTypeEnum
+    alternateIdentifier: str
+    alternateIdentifierType: AlternateIdentifierTypeEnum
 
 
 class PeriodOfTime(BaseModel):
