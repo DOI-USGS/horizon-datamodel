@@ -1,11 +1,11 @@
-from datetime import date
+from datetime import date, datetime
 
-from pydantic import BaseModel, HttpUrl
+import pydantic
 
 from .Dataset import PeriodOfTime, Location, Keyword
 from .Entity import Entity
 
-class DataReleaseCSDGM(BaseModel):
+class DataReleaseCSDGM(pydantic.BaseModel):
     """Basic metadata schema for information translated from a Content Standard for Digital Geospatial Metadata record.
 
     Fields
@@ -31,13 +31,15 @@ class DataReleaseCSDGM(BaseModel):
 
     """
     # Identification Information
-    identifier: HttpUrl | None = None
+    identifier: pydantic.HttpUrl | None = None
     title: str
     description: str
 
     # Dates
     issued: date
     temporal: PeriodOfTime | None = None
+    usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
 
     # Contacts
     contactPoint: Entity
