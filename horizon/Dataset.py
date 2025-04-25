@@ -273,7 +273,7 @@ class Dataset(CatalogedResource):
     usgsMetadataContactPoint: Entity
     usgsDataSource: UsgsDataSource
     usgsMissionArea: UsgsMissionArea | None = None
-    qualifiedAttribution: Contributor | None = None
+    qualifiedAttribution: list[Contributor] | None = None
     publisher: Entity
 
     # Resource Access
