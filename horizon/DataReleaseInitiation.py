@@ -38,10 +38,19 @@ def default_distribution(data: dict) -> list[Distribution]:
     """
     Default factory for DataReleaseInitiation.distribution
     """
-    distribution = []
 
     usgsIdentifier = data["usgsIdentifier"]
     identifier = data.get("identifier")
+
+    distribution = [
+        Distribution(
+            title="Globus Guest Collection",
+            description="Globus guest collection for accessing data via Globus transfer",
+            accessURL=pydantic.HttpUrl(globus_access_url(usgsIdentifier)),
+            format="HTML",
+            mediaType="text/html",
+        )
+    ]
 
     if identifier:
         distribution.append(
@@ -53,16 +62,6 @@ def default_distribution(data: dict) -> list[Distribution]:
                 mediaType="text/html",
             )
         )
-
-    distribution.append(
-        Distribution(
-            title="Globus Guest Collection",
-            description="Globus guest collection for accessing data via Globus transfer",
-            accessURL=pydantic.HttpUrl(globus_access_url(usgsIdentifier)),
-            format="HTML",
-            mediaType="text/html",
-        )
-    )
 
     return distribution
 
