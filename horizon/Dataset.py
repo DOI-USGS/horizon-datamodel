@@ -26,40 +26,40 @@ class Keyword(BaseModel):
 class DataciteRelationTypeEnum(str, Enum):
     """Description of the relationship of the resource being described and the related resource."""
 
-    IsCitedBy = "Is Cited By"
+    IsCitedBy = "IsCitedBy"
     Cites = "Cites"
-    IsSupplementTo = "Is Supplement To"
-    IsSupplementedBy = "Is Supplemented By"
-    IsContinuedBy = "Is Continued By"
+    IsSupplementTo = "IsSupplementTo"
+    IsSupplementedBy = "IsSupplementedBy"
+    IsContinuedBy = "IsContinuedBy"
     Continues = "Continues"
-    IsNewVersionOf = "Is New Version Of"
-    IsPreviousVersionOf = "Is Previous Version Of"
-    IsPartOf = "Is Part Of"
-    HasPart = "Has Part"
-    IsReferencedBy = "Is Referenced By"
+    IsNewVersionOf = "IsNewVersionOf"
+    IsPreviousVersionOf = "IsPreviousVersionOf"
+    IsPartOf = "IsPartOf"
+    HasPart = "HasPart"
+    IsReferencedBy = "IsReferencedBy"
     References = "References"
-    IsDocumentedBy = "Is Documented By"
+    IsDocumentedBy = "IsDocumentedBy"
     Documents = "Documents"
-    IsCompiledBy = "Is Compiled By"
+    IsCompiledBy = "IsCompiledBy"
     Compiles = "Compiles"
-    IsVariantFormOf = "Is Variant Form Of"
-    IsOriginalFormOf = "Is Original Form Of"
-    IsIdenticalTo = "Is Identical To"
-    HasMetadata = "Has Metadata"
-    IsMetadataFor = "Is Metadata For"
+    IsVariantFormOf = "IsVariantFormOf"
+    IsOriginalFormOf = "IsOriginalFormOf"
+    IsIdenticalTo = "IsIdenticalTo"
+    HasMetadata = "HasMetadata"
+    IsMetadataFor = "IsMetadataFor"
     Reviews = "Reviews"
-    IsReviewedBy = "Is Reviewed By"
-    IsDerivedFrom = "Is Derived From"
-    IsSourceOf = "Is Source Of"
+    IsReviewedBy = "IsReviewedBy"
+    IsDerivedFrom = "IsDerivedFrom"
+    IsSourceOf = "IsSourceOf"
     Describes = "Describes"
-    IsDescribedBy = "Is Described By"
-    HasVersion = "Has Version"
-    IsVersionOf = "Is Version Of"
+    IsDescribedBy = "IsDescribedBy"
+    HasVersion = "HasVersion"
+    IsVersionOf = "IsVersionOf"
     Requires = "Requires"
-    IsRequiredBy = "Is Required By"
+    IsRequiredBy = "IsRequiredBy"
     Obsoletes = "Obsoletes"
-    IsObsoletedBy = "Is Obsoleted By"
-    IsPublishedIn = "Is Published In"
+    IsObsoletedBy = "IsObsoletedBy"
+    IsPublishedIn = "IsPublishedIn"
 
 
 class RelatedIdentifierTypeEnum(str, Enum):
@@ -129,13 +129,13 @@ class AlternateIdentifier(BaseModel):
 
     Fields
     ------
-    identifier: An identifier or identifiers other than the primary Identifier
+    alternateIdentifier: An identifier or identifiers other than the primary Identifier
         applied to the resource being registered.
-    identifierType: The type of alternate identifier
+    alternateIdentifierType: The type of alternate identifier
     """
 
-    identifier: str
-    identifierType: AlternateIdentifierTypeEnum
+    alternateIdentifier: str
+    alternateIdentifierType: AlternateIdentifierTypeEnum
 
 
 class PeriodOfTime(BaseModel):
@@ -185,13 +185,15 @@ class VersionHistory(BaseModel):
 
     version: The version indicator (name or identifier) of a resource.
     issued: Date of formal issuance (e.g., publication) of the resource.
+    usgsApprovalIdentifier: The identifier associated with the record of approval for
+        the version of the resource.
     versionNotes: A description of changes between this version and the
         previous version of the resource
     """
 
     version: str | None = None
     issued: datetime | None = None
-    approvalIdentifier: str | None = None
+    usgsApprovalIdentifier: str | None = None
     versionNotes: str | None = None
 
 
