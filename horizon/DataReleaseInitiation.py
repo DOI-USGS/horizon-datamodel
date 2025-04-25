@@ -92,7 +92,7 @@ class DataReleaseInitiationForm(pydantic.BaseModel):
     usgsMissionArea: UsgsMissionArea | None = None
     relation: list[RelatedIdentifier] | None = None
     alternateIdentifier: list[AlternateIdentifier] | None = None
-    qualifiedAttribution: Contributor | None = None
+    qualifiedAttribution: list[Contributor] | None = None
     versionHistory: VersionHistory | None = None
 
 
