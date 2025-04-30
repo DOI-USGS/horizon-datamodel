@@ -217,9 +217,9 @@ class Component(BaseModel):
     """
 
     identifier: HttpUrl | None = None
-    title: str
-    usgsCitation: str
-    description: str
+    title: str | None = None
+    usgsCitation: str | None = None
+    description: str | None = None
     distribution: list[Distribution]
     alternateIdentifier: AlternateIdentifier | None = None
     isCatalogRecord: bool
@@ -280,7 +280,7 @@ class Dataset(CatalogedResource):
 
     # Resource Access
     distribution: list[Distribution]
-    component: list[Component]
+    component: list[Component] | None = None
 
     # Additional descriptors
     license: License
