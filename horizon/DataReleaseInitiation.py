@@ -108,7 +108,11 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
 
     usgsAssetType: The type of asset cataloged: data, model, publication, software
     usgsCreated: Date and time that the resource's record was created in the catalog
+    usgsCreatedBy: The entity responsible for creating the resource's record
+        in the catalog.
     usgsModified: Date and time that the resource's record was last modified
+    usgsModifiedBy: The entity responsible for modifying the resource's record
+        in the catalog.
     accessRights: Information about who can access the resource or an indication of its security status.
     publisher: The entity responsible for making the resource available.
     distribution: An available distribution of the dataset.
@@ -120,7 +124,9 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
 
     usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
     usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsCreatedBy: Entity | None = None
     usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsModifiedBy: Entity | None = None
     accessRights: AccessRightsEnum = AccessRightsEnum.public
 
     publisher: Entity = Entity(

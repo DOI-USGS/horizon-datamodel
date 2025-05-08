@@ -66,6 +66,6 @@ class Distribution(BaseModel):
     accessURL: HttpUrl | None = None
     byteSize: int | None = None
     checksum: Checksum | None = None
-    modifiedBy: Entity
-    modified: datetime
-    useForPreview: bool
+    modifiedBy: Entity | None = None
+    modified: datetime | None = None
+    useForPreview: bool | None = None

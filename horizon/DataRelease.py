@@ -18,6 +18,8 @@ class StatusEnum(str, Enum):
         Data release has received Bureau approval and is publicly available.
     underRevision = "Under Revision"
         Data release is being revised. The dataset metadata may be available but files are not accessible.
+    revisionSubmitted = "Revision Submitted"
+        Data release has been submitted to the curation team for revision.
     revised = "Revised"
         Data release has been revised.
     deprecated = "Deprecated"
@@ -30,6 +32,7 @@ class StatusEnum(str, Enum):
     provisional = "Provisional"
     published = "Published"
     underRevision = "Under Revision"
+    revisionSubmitted = "Revision Submitted"
     revised = "Revised"
     deprecated = "Deprecated"
 
