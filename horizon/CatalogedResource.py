@@ -2,6 +2,7 @@ from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, HttpUrl
+from .Entity import Entity
 
 
 class UsgsAssetTypeEnum(str, Enum):
@@ -40,7 +41,9 @@ class CatalogedResource(BaseModel):
     usgsAssetType: UsgsAssetTypeEnum
 
     usgsCreated: datetime
+    usgsCreatedBy: Entity | None = None
     usgsModified: datetime
+    usgsModifiedBy: Entity | None = None
 
     description: str
     accessRights: AccessRightsEnum
