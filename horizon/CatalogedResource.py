@@ -26,7 +26,11 @@ class CatalogedResource(BaseModel):
     usgsAssetType: The type of asset cataloged: data, model, publication, software
     description: A free-text account of the resource.
     usgsCreated: Date and time that the resource's record was created in the catalog
+    usgsCreatedBy: The entity responsible for creating the resource's record
+        in the catalog.
     usgsModified: Date and time that the resource's record was last modified
+    usgsModifiedBy: The entity responsible for modifying the resource's record
+        in the catalog.
     identifier: A unique identifier of the resource being described or
         cataloged. This identifier should be represented by a URI.
     usgsIdentifier: Identifier used to internally identify a resource within a
