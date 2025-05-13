@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 import os
 import urllib
 
@@ -49,11 +48,20 @@ def default_distribution(data: dict) -> list[Distribution]:
             accessURL=pydantic.HttpUrl(globus_access_url(usgsIdentifier)),
             format="HTML",
             mediaType="text/html",
+
+            # TODO: Fix this, we probably want modifiedBy to be something other
+            # than the publisher. Using publisher for now because it is
+            # available.
+            modifiedBy=data['publisher'],
+            modified=datetime.now(),  # TODO: verify this assumption
+            useForPreview=False,      # TODO: verify this assumption
         )
     ]
 
     if identifier:
         distribution.append(
+            # TODO: Update the following distribution. It is missing required
+            # fields modifiedBy, modified, and useForPreview.
             Distribution(
                 title="Data Release",
                 description="Data Release",
