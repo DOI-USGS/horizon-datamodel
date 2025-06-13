@@ -289,4 +289,4 @@ class Dataset(CatalogedResource):
     spatial: Location | None = None
     relation: list[RelatedIdentifier] | None = None
     alternateIdentifier: list[AlternateIdentifier] | None = None
-    versionHistory: VersionHistory | None = None
+    versionHistory: list[VersionHistory] | None = None
