@@ -92,7 +92,7 @@ class DataReleaseInitiationForm(pydantic.BaseModel):
     relation: list[RelatedIdentifier] | None = None
     alternateIdentifier: list[AlternateIdentifier] | None = None
     qualifiedAttribution: list[Contributor] | None = None
-    versionHistory: VersionHistory | None = None
+    versionHistory: list[VersionHistory] | None = None
 
 
 class DataReleaseInitiation(DataReleaseInitiationForm):
