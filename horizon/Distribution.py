@@ -31,11 +31,10 @@ class Distribution(BaseModel):
 
     Fields
     ------
-    title: User added free text description of the distribution. We could use
-        this field for filename and description for user-provided free text
+    title: Type of distribution (e.g., Data Landing Page,
+        Data Release Metadata, Data File, Data Service, Globus Guest Collection, etc.)
     name: filename for downloadable files
-    description: Description of the type of distribution (e.g., Landing Page,
-        Original Metadata, WMS Service)
+    description: User added free text description of the distribution.
     format: Should only be used if IANA Media Type is not available
         https://www.iana.org/assignments/media-types/media-types.xhtml
         If IANA Media Type is available mediaType property should be used.
