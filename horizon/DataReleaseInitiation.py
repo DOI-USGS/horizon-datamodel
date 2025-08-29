@@ -1,7 +1,4 @@
 from datetime import datetime
-from enum import Enum
-import os
-import urllib
 
 import pydantic
 
@@ -11,59 +8,6 @@ from .Dataset import UsgsDataSource, UsgsMissionArea, VersionHistory, RelatedIde
 from .Distribution import Distribution
 from .Entity import Entity, Creator, Contributor
 from .License import License
-
-
-COLLECTION_ID = os.getenv("GLOBUS_COLLECTION_ID", "0be095a6-c4e9-4db2-aec0-3310f11dddc7")
-
-
-def globus_access_url(usgsIdentifier: str) -> str:
-    """
-    Helper function which constructs globus collection access url from usgsIdentifier.
-
-    Example use:
-        usgsIdentifier = 'USGS:1234-5678-9012-3456'
-        globus_access_url(usgsIdentifier) == 'https://app.globus.org/file-manager?origin_id=0be095a6-c4e9-4db2-aec0-3310f11dddc7&origin_path=%2FUSGS%3A1234-5678-9012-3456&two_pane=false'
-    """
-    base = "https://app.globus.org/file-manager"
-    query = {
-        "origin_id": COLLECTION_ID,
-        "origin_path": "/" + usgsIdentifier,
-        "two_pane": "false",
-    }
-    query_string = "?" + urllib.parse.urlencode(query)
-    return urllib.parse.urljoin(base, query_string)
-
-
-def default_distribution(data: dict) -> list[Distribution]:
-    """
-    Default factory for DataReleaseInitiation.distribution
-    """
-
-    usgsIdentifier = data["usgsIdentifier"]
-    identifier = data.get("identifier")
-
-    distribution = [
-        Distribution(
-            title="Globus Guest Collection",
-            description="Globus guest collection for accessing data via Globus transfer",
-            accessURL=pydantic.HttpUrl(globus_access_url(usgsIdentifier)),
-            format="HTML",
-            mediaType="text/html",
-        )
-    ]
-
-    if identifier:
-        distribution.append(
-            Distribution(
-                title="Data Release",
-                description="Data Release",
-                accessURL=pydantic.HttpUrl(identifier),
-                format="HTML",
-                mediaType="text/html",
-            )
-        )
-
-    return distribution
 
 
 class DataReleaseInitiationForm(pydantic.BaseModel):
@@ -117,7 +61,7 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     publisher: The entity responsible for making the resource available.
     distribution: An available distribution of the dataset.
     """
-    
+
     usgsIdentifier: str
 
     identifier: pydantic.HttpUrl | None = None
@@ -129,17 +73,8 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     usgsModifiedBy: Entity | None = None
     accessRights: AccessRightsEnum = AccessRightsEnum.public
 
-    publisher: Entity = Entity(
-        entity_id="https://ror.org/035a68863",
-        name="United States Geological Survey",
-        nameType="Organizational",
-        nameIdentifier="https://ror.org/035a68863",
-        email=None,
-    )
-    
-    distribution: list[Distribution] = pydantic.Field(
-        default_factory=default_distribution,
-    )
-    
+    publisher: Entity | None = None
+    distribution: list[Distribution] | None = None
+
     status: StatusEnum = StatusEnum.created
     usgsReleaseType: UsgsReleaseTypeEnum = UsgsReleaseTypeEnum.dataRelease
