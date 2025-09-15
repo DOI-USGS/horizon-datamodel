@@ -228,6 +228,7 @@ class Dataset(CatalogedResource):
     license: A legal document under which the resource is made available.
     usgsPurpose: A summary of the intentions with which the resource was developed
     keyword: A keyword or tag describing the resource.
+    systemKeyword: Keywords used internally for system operations, queries, or application logic.
     spatial: The geographical area covered by the dataset.
     relation: A resource with a relationship to the cataloged resource. This
         property includes DCAT sub-properties hasPart, isReferencedBy,
@@ -259,6 +260,7 @@ class Dataset(CatalogedResource):
     license: License
     usgsPurpose: str | None = None
     keyword: list[Keyword] | None = None
+    systemKeyword: list[Keyword] | None = None
     spatial: Location | None = None
     relation: list[RelatedIdentifier] | None = None
     alternateIdentifier: list[AlternateIdentifier] | None = None
