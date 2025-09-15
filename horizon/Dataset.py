@@ -201,34 +201,6 @@ class VersionHistory(BaseModel):
     versionNotes: str | None = None
 
 
-class Component(BaseModel):
-    """A subset of a Dataset that may require additional
-    descriptive metadata to be discovered and understood by
-    users of the data.
-
-    Fields
-    ------
-    identifier: A granular DOI used to identify the component that is different
-        that the CatalogedResource's DOI
-    title: Name given to the component
-    usgsCitation: The recommended citation for the component. In most cases
-        this citation will be the same as the Dataset citation
-    description: Free-text description of the component
-    isCatalogRecord: Boolean indication if the metadata should be cataloged
-        independently from the Dataset
-    distribution: An available distribution of the component.
-    alternateIdentifier: USGS Metadata PID
-    """
-
-    identifier: HttpUrl | None = None
-    title: str | None = None
-    usgsCitation: str | None = None
-    description: str | None = None
-    distribution: list[Distribution]
-    alternateIdentifier: AlternateIdentifier | None = None
-    isCatalogRecord: bool
-
-
 class Dataset(CatalogedResource):
     """A collection of data, published or curated by a single agent, and available for access or download in one or more representations.
 
@@ -252,8 +224,6 @@ class Dataset(CatalogedResource):
     publisher: The entity responsible for making the resource available.
 
     distribution: An available distribution of the dataset.
-    component: A container for holding components or subsets of the overall
-        Dataset that require additional metadata to be discovered and understood.
 
     license: A legal document under which the resource is made available.
     usgsPurpose: A summary of the intentions with which the resource was developed
@@ -284,7 +254,6 @@ class Dataset(CatalogedResource):
 
     # Resource Access
     distribution: list[Distribution]
-    component: list[Component] | None = None
 
     # Additional descriptors
     license: License

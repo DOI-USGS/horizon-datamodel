@@ -2,7 +2,15 @@ from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, HttpUrl
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import ForwardRef
+
 from .Entity import Entity
+
+# Forward references for recursive models
+CatalogedResource = ForwardRef("CatalogedResource")
 
 
 class UsgsAssetTypeEnum(str, Enum):
@@ -37,6 +45,8 @@ class CatalogedResource(BaseModel):
         particular system
     accessRights: Information about who can access the resource or an
         indication of its security status.
+    hasPart: Resources that are part of this resource (dcat:hasPart).
+    isPartOf: A larger resource that this resource is part of (dcat:isPartOf).
 
     """
     usgsIdentifier: str
@@ -51,3 +61,11 @@ class CatalogedResource(BaseModel):
 
     description: str
     accessRights: AccessRightsEnum
+
+    hasPart: list["CatalogedResource"] | None = None
+    isPartOf: list["CatalogedResource"] | None = None
+
+
+
+# Resolve forward references
+CatalogedResource.model_rebuild()
