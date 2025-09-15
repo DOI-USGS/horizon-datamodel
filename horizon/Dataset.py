@@ -98,19 +98,22 @@ class RelatedIdentifier(BaseModel):
         developed alongside the cataloged resource and thus critical to the
         complete understanding of the cataloged resource.
     relatedIdentifierType: The type of related identifier.
+    description: A free-text description of the related resource.
     """
 
     dataciteRelationType: DataciteRelationTypeEnum
     relatedIdentifier: str
-    isPrimaryRelatedIdentifier: bool  # Should we get rid of this?
+    isPrimaryRelatedIdentifier: bool  
     relatedIdentifierType: RelatedIdentifierTypeEnum
+    description: str | None = None
 
 
 class AlternateIdentifierTypeEnum(str, Enum):
     """The type of alternate identifier
 
     "ARK", "Servcat Number", "Genbank Accession Number",
-    "IGSN", "LSID", "PURL", "Ref Seq ID", "Local Identifier", "Metadata Identifier"
+    "IGSN", "LSID", "PURL", "Ref Seq ID", "Local Identifier",
+    "Metadata Identifier", "ScienceBase Alt ID"
     """
 
     ARK = "ARK"
@@ -122,6 +125,7 @@ class AlternateIdentifierTypeEnum(str, Enum):
     RefSeqID = "Ref Seq ID"
     LocalIdentifier = "Local Identifier"
     MetadataIdentifier = "Metadata Identifier"
+    ScienceBaseAltID = "ScienceBase Alt ID"
 
 
 class AlternateIdentifier(BaseModel):
