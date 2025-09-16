@@ -38,9 +38,6 @@ class CatalogedResource(BaseModel):
         particular system
     accessRights: Information about who can access the resource or an
         indication of its security status.
-    hasPart: Resources that are part of this resource (dcat:hasPart).
-    isPartOf: A larger resource that this resource is part of (dcat:isPartOf).
-
     """
     usgsIdentifier: str
     identifier: HttpUrl | None = None
