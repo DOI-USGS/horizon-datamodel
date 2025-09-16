@@ -1,9 +1,3 @@
-from pydantic import BaseModel, HttpUrl
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .CatalogedResource import CatalogedResource
-
 from .Dataset import Dataset
 
 
@@ -38,18 +32,6 @@ class ComponentDataset(Dataset):
         Dataset that require additional metadata to be discovered and understood.
     """
 
-    component: list["Component"] | None = None
+    component: list[Component] | None = None
     
-    @property
-    def hasPart(self) -> list[CatalogedResource] | None:
-        return self.component
 
-    @hasPart.setter
-    def hasPart(self, value: list[CatalogedResource]):
-        self.component = value
-
-
-# Resolve forward references
-
-Component.model_rebuild()
-ComponentDataset.model_rebuild()
