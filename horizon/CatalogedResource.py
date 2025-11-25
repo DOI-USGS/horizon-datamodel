@@ -23,19 +23,24 @@ class CatalogedResource(BaseModel):
 
     Fields
     ------
+    usgsIdentifier: Identifier used to internally identify a resource within a
+        particular system
+    identifier: A unique identifier of the resource being described or
+        cataloged. This identifier should be represented by a URI.
     title: A name given to the resource.
     usgsAssetType: The type of asset cataloged: data, model, publication, software
-    description: A free-text account of the resource.
+    usgsHasPart: Indicates whether the resource has a part or parts that are
+        cataloged separately. If true, the resource has parts that are cataloged.
+    isPartOf: The identifier of the related resource in which the described resource
+        is physically or logically included.
     usgsCreated: Date and time that the resource's record was created in the catalog
     usgsCreatedBy: The entity responsible for creating the resource's record
         in the catalog.
     usgsModified: Date and time that the resource's record was last modified
     usgsModifiedBy: The entity responsible for modifying the resource's record
         in the catalog.
-    identifier: A unique identifier of the resource being described or
-        cataloged. This identifier should be represented by a URI.
-    usgsIdentifier: Identifier used to internally identify a resource within a
-        particular system
+
+    description: A free-text account of the resource.
     accessRights: Information about who can access the resource or an
         indication of its security status.
     """
@@ -43,6 +48,8 @@ class CatalogedResource(BaseModel):
     identifier: HttpUrl | None = None
     title: str
     usgsAssetType: UsgsAssetTypeEnum
+    usgsHasPart: bool | None = None
+    isPartOf: str | None = None
 
     usgsCreated: datetime
     usgsCreatedBy: Entity | None = None
