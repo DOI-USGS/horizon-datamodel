@@ -51,6 +51,8 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
         This identifier should be represented by a URI.
 
     usgsAssetType: The type of asset cataloged: data, model, publication, software
+    usgsHasPart: Indicates whether the resource has a part or parts that are
+        cataloged separately. If true, the resource has parts that are cataloged.
     usgsCreated: Date and time that the resource's record was created in the catalog
     usgsCreatedBy: The entity responsible for creating the resource's record
         in the catalog.
@@ -67,6 +69,7 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     identifier: pydantic.HttpUrl | None = None
 
     usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
+    usgsHasPart: bool | None = False
     usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
     usgsCreatedBy: Entity | None = None
     usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
