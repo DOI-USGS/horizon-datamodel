@@ -4,7 +4,7 @@ import pydantic
 
 from .CatalogedResource import UsgsAssetTypeEnum, AccessRightsEnum
 from .DataRelease import StatusEnum, UsgsReleaseTypeEnum
-from .Dataset import UsgsDataSource, UsgsMissionArea, VersionHistory, RelatedIdentifier, AlternateIdentifier
+from .Dataset import UsgsDataSource, UsgsMissionArea, VersionHistory, RelatedIdentifier, AlternateIdentifier, Keyword
 from .Distribution import Distribution
 from .Entity import Entity, Creator, Contributor
 from .License import License
@@ -37,6 +37,7 @@ class DataReleaseInitiationForm(pydantic.BaseModel):
     alternateIdentifier: list[AlternateIdentifier] | None = None
     qualifiedAttribution: list[Contributor] | None = None
     versionHistory: list[VersionHistory] | None = None
+    systemKeyword: list[Keyword] | None = None
 
 
 class DataReleaseInitiation(DataReleaseInitiationForm):
