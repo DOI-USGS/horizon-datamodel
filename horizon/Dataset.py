@@ -16,11 +16,21 @@ class Keyword(BaseModel):
     conceptScheme: The name of the scheme or classification code or authority
         (e.g., USGS Thesaurus)
     conceptUri: The URI of the concept
+    conceptType: A user-defined category that describes the contextual role or thematic
+            grouping of the concept, independent of any formal classification scheme.
+            It complements conceptScheme by providing a higher-level or cross-cutting
+            categorization that may span multiple schemes or be entirely informal. 
+            Examples:
+                - "Theme" - for topical or subject-related keywords.
+                - "Place" - for geographical or spatial references.
+                - "Temporal" - for time-related concepts.
+
     """
 
     concept: str
     conceptScheme: str | None = None
     conceptUri: HttpUrl | None = None
+    conceptType: str | None = None
 
 
 class DataciteRelationTypeEnum(str, Enum):
