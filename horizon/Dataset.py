@@ -14,16 +14,20 @@ class Keyword(BaseModel):
     """A keyword or tag describing the resource.
     concept: The keyword or tag
     conceptScheme: The name of the scheme or classification code or authority
-        (e.g., USGS Thesaurus)
+        Examples:
+            - "USGS Thesaurus" - for USGS Thesaurus keywords
+            - "ISO 19115 Topic Category" - for ISO 19115 Topic Categories
+            - "Common geographic areas" - for Common geographic areas keywords
+            - "Marine Realms Information Bank" - for MRIB keywords
     conceptUri: The URI of the concept
     conceptType: A user-defined category that describes the contextual role or thematic
-            grouping of the concept, independent of any formal classification scheme.
-            It complements conceptScheme by providing a higher-level or cross-cutting
-            categorization that may span multiple schemes or be entirely informal. 
-            Examples:
-                - "Theme" - for topical or subject-related keywords.
-                - "Place" - for geographical or spatial references.
-                - "Temporal" - for time-related concepts.
+        grouping of the concept, independent of any formal classification scheme.
+        It can complement conceptScheme by providing a higher-level or cross-cutting
+        categorization that may span multiple schemes, may be informal, or may be project-specific. 
+        Examples:
+            - "Theme" - for topical or subject-related keywords.
+            - "Place" - for geographical or spatial references.
+            - "CO_FireProject_Category" - for specific project-related categorizations.
 
     """
 
