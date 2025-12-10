@@ -3,7 +3,6 @@ from datetime import datetime, date
 import pydantic
 
 from .CatalogedResource import UsgsAssetTypeEnum, AccessRightsEnum
-from .DataRelease import UsgsReleaseTypeEnum
 from .Dataset import VersionHistory, RelatedIdentifier, AlternateIdentifier, PeriodOfTime, Location, Keyword
 from .Distribution import Distribution
 from .Entity import Entity, Creator, Contributor
@@ -46,8 +45,8 @@ class DataReleaseComponentForm(pydantic.BaseModel):
     isCatalogRecord: bool = False
 
 
-class DataReleaseComponent(DataReleaseComponentForm):
-    """Basic metadata schema for initiating a component.
+class DataReleaseComponentSystem(DataReleaseComponentForm):
+    """Metadata schema that extends the user input information for a component with system generated information.
 
     Fields
     ------
@@ -55,8 +54,6 @@ class DataReleaseComponent(DataReleaseComponentForm):
     usgsIdentifier: Identifier used to internally identify a resource within a particular system
 
     usgsAssetType: The type of asset cataloged: data, model, publication, software
-    usgsHasPart: Indicates whether the resource has a part or parts that are
-        cataloged separately. If true, the resource has parts that are cataloged.
     usgsCreated: Date and time that the resource's record was created in the catalog
     usgsCreatedBy: The entity responsible for creating the resource's record
         in the catalog.
@@ -86,7 +83,53 @@ class DataReleaseComponent(DataReleaseComponentForm):
     usgsIdentifier: str
 
     usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
-    usgsHasPart: bool | None = None
+    usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsCreatedBy: Entity | None = None
+    usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
+    usgsModifiedBy: Entity | None = None
+    accessRights: AccessRightsEnum = AccessRightsEnum.public
+
+    distribution: list[Distribution] | None = None
+
+
+class DataReleaseComponent(DataReleaseComponentSystem):
+    """Basic metadata schema for a component.
+
+    Fields
+    ------
+    
+    usgsIdentifier: Identifier used to internally identify a resource within a particular system
+
+    usgsAssetType: The type of asset cataloged: data, model, publication, software
+    usgsCreated: Date and time that the resource's record was created in the catalog
+    usgsCreatedBy: The entity responsible for creating the resource's record
+        in the catalog.
+    usgsModified: Date and time that the resource's record was last modified
+    usgsModifiedBy: The entity responsible for modifying the resource's record
+        in the catalog.
+    accessRights: Information about who can access the resource or an indication of its security status.
+    distribution: An available distribution of the dataset.
+
+    identifier: A unique identifier of the resource being described or
+        cataloged. This identifier should be represented by a URI.
+    title: A name given to the resource.
+    description: A free-text account of the resource.
+
+    issued: Date of formal issuance (e.g., publication) of the resource.
+    temporal: The temporal period that the dataset covers.
+
+    contactPoint: Relevant contact information for the cataloged resource.
+    usgsMetadataContactPoint: The entity responsible for creating and
+        maintaining the metadata for the resource.
+
+    usgsPurpose: A summary of the intentions with which the resource was developed
+    keyword: A keyword or tag describing the resource.
+    spatial: The geographical area covered by the dataset.
+    """
+
+    usgsIdentifier: str
+
+    usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
     usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
     usgsCreatedBy: Entity | None = None
     usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
