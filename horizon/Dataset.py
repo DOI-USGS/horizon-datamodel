@@ -14,13 +14,27 @@ class Keyword(BaseModel):
     """A keyword or tag describing the resource.
     concept: The keyword or tag
     conceptScheme: The name of the scheme or classification code or authority
-        (e.g., USGS Thesaurus)
+        Examples:
+            - "USGS Thesaurus" - for USGS Thesaurus keywords
+            - "ISO 19115 Topic Category" - for ISO 19115 Topic Categories
+            - "Common geographic areas" - for Common geographic areas keywords
+            - "Marine Realms Information Bank" - for MRIB keywords
     conceptUri: The URI of the concept
+    conceptType: A user-defined category that describes the contextual role or thematic
+        grouping of the concept, independent of any formal classification scheme.
+        It can complement conceptScheme by providing a higher-level or cross-cutting
+        categorization that may span multiple schemes, may be informal, or may be project-specific. 
+        Examples:
+            - "Theme" - for topical or subject-related keywords.
+            - "Place" - for geographical or spatial references.
+            - "CO_FireProject_Category" - for specific project-related categorizations.
+
     """
 
     concept: str
     conceptScheme: str | None = None
     conceptUri: HttpUrl | None = None
+    conceptType: str | None = None
 
 
 class DataciteRelationTypeEnum(str, Enum):
@@ -98,19 +112,22 @@ class RelatedIdentifier(BaseModel):
         developed alongside the cataloged resource and thus critical to the
         complete understanding of the cataloged resource.
     relatedIdentifierType: The type of related identifier.
+    description: A free-text description of the related resource.
     """
 
     dataciteRelationType: DataciteRelationTypeEnum
     relatedIdentifier: str
-    isPrimaryRelatedIdentifier: bool  # Should we get rid of this?
+    isPrimaryRelatedIdentifier: bool  
     relatedIdentifierType: RelatedIdentifierTypeEnum
+    description: str | None = None
 
 
 class AlternateIdentifierTypeEnum(str, Enum):
     """The type of alternate identifier
 
     "ARK", "Servcat Number", "Genbank Accession Number",
-    "IGSN", "LSID", "PURL", "Ref Seq ID", "Local Identifier", "Metadata Identifier"
+    "IGSN", "LSID", "PURL", "Ref Seq ID", "Local Identifier",
+    "Metadata Identifier", "ScienceBase Alt ID"
     """
 
     ARK = "ARK"
@@ -122,6 +139,7 @@ class AlternateIdentifierTypeEnum(str, Enum):
     RefSeqID = "Ref Seq ID"
     LocalIdentifier = "Local Identifier"
     MetadataIdentifier = "Metadata Identifier"
+    ScienceBaseAltID = "ScienceBase Alt ID"
 
 
 class AlternateIdentifier(BaseModel):
@@ -197,34 +215,6 @@ class VersionHistory(BaseModel):
     versionNotes: str | None = None
 
 
-class Component(BaseModel):
-    """A subset of a Dataset that may require additional
-    descriptive metadata to be discovered and understood by
-    users of the data.
-
-    Fields
-    ------
-    identifier: A granular DOI used to identify the component that is different
-        that the CatalogedResource's DOI
-    title: Name given to the component
-    usgsCitation: The recommended citation for the component. In most cases
-        this citation will be the same as the Dataset citation
-    description: Free-text description of the component
-    isCatalogRecord: Boolean indication if the metadata should be cataloged
-        independently from the Dataset
-    distribution: An available distribution of the component.
-    alternateIdentifier: USGS Metadata PID
-    """
-
-    identifier: HttpUrl | None = None
-    title: str | None = None
-    usgsCitation: str | None = None
-    description: str | None = None
-    distribution: list[Distribution]
-    alternateIdentifier: AlternateIdentifier | None = None
-    isCatalogRecord: bool
-
-
 class Dataset(CatalogedResource):
     """A collection of data, published or curated by a single agent, and available for access or download in one or more representations.
 
@@ -248,12 +238,11 @@ class Dataset(CatalogedResource):
     publisher: The entity responsible for making the resource available.
 
     distribution: An available distribution of the dataset.
-    component: A container for holding components or subsets of the overall
-        Dataset that require additional metadata to be discovered and understood.
 
     license: A legal document under which the resource is made available.
     usgsPurpose: A summary of the intentions with which the resource was developed
     keyword: A keyword or tag describing the resource.
+    systemKeyword: Keywords used internally for system operations, queries, or application logic.
     spatial: The geographical area covered by the dataset.
     relation: A resource with a relationship to the cataloged resource. This
         property includes DCAT sub-properties hasPart, isReferencedBy,
@@ -280,12 +269,12 @@ class Dataset(CatalogedResource):
 
     # Resource Access
     distribution: list[Distribution]
-    component: list[Component] | None = None
 
     # Additional descriptors
     license: License
     usgsPurpose: str | None = None
     keyword: list[Keyword] | None = None
+    systemKeyword: list[Keyword] | None = None
     spatial: Location | None = None
     relation: list[RelatedIdentifier] | None = None
     alternateIdentifier: list[AlternateIdentifier] | None = None
