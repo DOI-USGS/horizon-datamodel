@@ -62,6 +62,7 @@ class DataReleaseComponentSystem(DataReleaseComponentForm):
         in the catalog.
     accessRights: Information about who can access the resource or an indication of its security status.
     distribution: An available distribution of the dataset.
+    publisher: The entity responsible for making the resource available.
 
     identifier: A unique identifier of the resource being described or
         cataloged. This identifier should be represented by a URI.
@@ -90,6 +91,7 @@ class DataReleaseComponentSystem(DataReleaseComponentForm):
     accessRights: AccessRightsEnum = AccessRightsEnum.public
 
     distribution: list[Distribution] | None = None
+    publisher: Entity | None = None
 
 
 class DataReleaseComponent(DataReleaseComponentSystem):
