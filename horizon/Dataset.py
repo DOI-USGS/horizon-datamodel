@@ -169,12 +169,12 @@ class PeriodOfTime(BaseModel):
     ------
     startDate: The start of the period.
     endDate: The end of the period.
-    singleDate: A single date.
+    singleDates: A list of single dates describing a dataset.
     """
 
     startDate: date | None = None
     endDate: date | None = None
-    singleDate: date | None = None
+    singleDates: list[date] | None = None
     
 
 class UsgsDataSource(BaseModel):
