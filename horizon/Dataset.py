@@ -158,7 +158,6 @@ class AlternateIdentifier(BaseModel):
 
 class PeriodOfTime(BaseModel):
     """An interval of time that is named or defined by its start and end dates.
-    Or a single date.
     The interval can be open. For example, it can have just a start or just an end.
 
     In DCAT, temporal must be a string with two iso-8601 datetimes separated by
@@ -169,12 +168,10 @@ class PeriodOfTime(BaseModel):
     ------
     startDate: The start of the period.
     endDate: The end of the period.
-    singleDate: A single date.
     """
 
     startDate: date | None = None
     endDate: date | None = None
-    singleDate: date | None = None
     
 
 class UsgsDataSource(BaseModel):
