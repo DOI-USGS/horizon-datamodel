@@ -79,7 +79,9 @@ class DataReleaseComponentSystem(DataReleaseComponentForm):
 
 
 class DataReleaseComponent(DataReleaseComponentSystem):
-    """Basic metadata schema for a component.
+    """Basic metadata schema for a component. 
+    Includes user input fields, system generated fields, and additional 
+    descriptive fields that are retrieved from the DataReleaseCSDGM, if available.
 
     Fields
     ------
@@ -95,8 +97,6 @@ class DataReleaseComponent(DataReleaseComponentSystem):
     keyword: A keyword or tag describing the resource.
     spatial: The geographical area covered by the dataset.
     """
-
-    # Fields Retrieved from DataReleaseCSDGM, if available
 
     ## Dates
     issued: date | None = None
