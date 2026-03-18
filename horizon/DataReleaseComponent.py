@@ -16,7 +16,6 @@ class DataReleaseComponentForm(pydantic.BaseModel):
     ------
     isPartOf: The identifier of the related resource in which the described resource
         is physically or logically included.
-    usgsApprovalIdentifier: The identifier associated with the original record of approval for the data release.
     title: A name given to the resource.
     componentName: The short name provided for the directory that contains the component.
     creator: The entity responsible for producing the resource.
@@ -64,21 +63,6 @@ class DataReleaseComponentSystem(DataReleaseComponentForm):
     distribution: An available distribution of the dataset.
     publisher: The entity responsible for making the resource available.
 
-    identifier: A unique identifier of the resource being described or
-        cataloged. This identifier should be represented by a URI.
-    title: A name given to the resource.
-    description: A free-text account of the resource.
-
-    issued: Date of formal issuance (e.g., publication) of the resource.
-    temporal: The temporal period that the dataset covers.
-
-    contactPoint: Relevant contact information for the cataloged resource.
-    usgsMetadataContactPoint: The entity responsible for creating and
-        maintaining the metadata for the resource.
-
-    usgsPurpose: A summary of the intentions with which the resource was developed
-    keyword: A keyword or tag describing the resource.
-    spatial: The geographical area covered by the dataset.
     """
 
     usgsIdentifier: str
@@ -95,27 +79,12 @@ class DataReleaseComponentSystem(DataReleaseComponentForm):
 
 
 class DataReleaseComponent(DataReleaseComponentSystem):
-    """Basic metadata schema for a component.
+    """Basic metadata schema for a component. 
+    Includes user input fields, system generated fields, and additional 
+    descriptive fields that are retrieved from the DataReleaseCSDGM, if available.
 
     Fields
     ------
-    
-    usgsIdentifier: Identifier used to internally identify a resource within a particular system
-
-    usgsAssetType: The type of asset cataloged: data, model, publication, software
-    usgsCreated: Date and time that the resource's record was created in the catalog
-    usgsCreatedBy: The entity responsible for creating the resource's record
-        in the catalog.
-    usgsModified: Date and time that the resource's record was last modified
-    usgsModifiedBy: The entity responsible for modifying the resource's record
-        in the catalog.
-    accessRights: Information about who can access the resource or an indication of its security status.
-    distribution: An available distribution of the dataset.
-
-    identifier: A unique identifier of the resource being described or
-        cataloged. This identifier should be represented by a URI.
-    title: A name given to the resource.
-    description: A free-text account of the resource.
 
     issued: Date of formal issuance (e.g., publication) of the resource.
     temporal: The temporal period that the dataset covers.
@@ -128,19 +97,6 @@ class DataReleaseComponent(DataReleaseComponentSystem):
     keyword: A keyword or tag describing the resource.
     spatial: The geographical area covered by the dataset.
     """
-
-    usgsIdentifier: str
-
-    usgsAssetType: UsgsAssetTypeEnum = UsgsAssetTypeEnum.data
-    usgsCreated: datetime = pydantic.Field(default_factory=datetime.now)
-    usgsCreatedBy: Entity | None = None
-    usgsModified: datetime = pydantic.Field(default_factory=datetime.now)
-    usgsModifiedBy: Entity | None = None
-    accessRights: AccessRightsEnum = AccessRightsEnum.public
-
-    distribution: list[Distribution] | None = None
-
-    # Fields Retrieved from DataReleaseCSDGM, if available
 
     ## Dates
     issued: date | None = None
