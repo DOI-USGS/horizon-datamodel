@@ -26,6 +26,9 @@ class DataReleaseInitiationForm(pydantic.BaseModel):
     alternateIdentifier: An identifier or identifiers other than the primary Identifier applied to the resource being registered.
     qualifiedAttribution: Link to an Agent having some form of responsibility for the resource
     versionHistory: Description of versions of the dataset described within a given identifier.
+    systemKeyword: Keywords used internally for system operations, queries, or application logic.
+    usgsReleaseType: The type of release. Different types of releases fall
+        under different USGS policy requirements.
     """
     usgsApprovalIdentifier: str
     title: str
@@ -38,6 +41,7 @@ class DataReleaseInitiationForm(pydantic.BaseModel):
     qualifiedAttribution: list[Contributor] | None = None
     versionHistory: list[VersionHistory] | None = None
     systemKeyword: list[Keyword] | None = None
+    usgsReleaseType: UsgsReleaseTypeEnum = UsgsReleaseTypeEnum.dataRelease
 
 
 class DataReleaseInitiation(DataReleaseInitiationForm):
@@ -81,4 +85,3 @@ class DataReleaseInitiation(DataReleaseInitiationForm):
     distribution: list[Distribution] | None = None
 
     status: StatusEnum = StatusEnum.created
-    usgsReleaseType: UsgsReleaseTypeEnum = UsgsReleaseTypeEnum.dataRelease
