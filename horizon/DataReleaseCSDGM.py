@@ -3,7 +3,7 @@ from datetime import date
 from pydantic import BaseModel, HttpUrl
 
 from .Dataset import PeriodOfTime, Location, Keyword
-from .Entity import Entity
+from .Entity import Entity, Contributor
 
 
 class DataReleaseCSDGM(BaseModel):
@@ -22,6 +22,7 @@ class DataReleaseCSDGM(BaseModel):
     contactPoint: Relevant contact information for the cataloged resource.
     usgsMetadataContactPoint: The entity responsible for creating and
         maintaining the metadata for the resource.
+    qualifiedAttribution: Link to an Agent having some form of responsibility for the resource
 
     usgsPurpose: A summary of the intentions with which the resource was developed
     keyword: A keyword or tag describing the resource.
@@ -40,6 +41,7 @@ class DataReleaseCSDGM(BaseModel):
     # Contacts
     contactPoint: Entity
     usgsMetadataContactPoint: Entity
+    qualifiedAttribution: list[Contributor] | None = None
 
     # Additional Descriptors
     usgsPurpose: str | None = None
