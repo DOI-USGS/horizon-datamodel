@@ -8,7 +8,7 @@ This project contains the metadata schema component that supports the Horizon pr
 
 [OPEN SOURCE PROJECT - IN PROGRESS]
 
-A provisional, development version is available at https://github.com/DOI-USGS/horizon-datamodels.
+A provisional, development version is available at https://github.com/DOI-USGS/horizon-datamodel.
 
 The main branch will have the most up-to-date version of the code.
 
