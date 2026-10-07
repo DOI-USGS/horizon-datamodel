@@ -159,6 +159,15 @@
   .hl { background: #3a3410; border-radius: 3px; }
   @keyframes flashrow { 0% { background: #2a3a52; } 100% { background: transparent; } }
   tr.flash td { animation: flashrow 1.6s ease-out; }
+
+  /* Keyboard focus visibility (Section 508 / WCAG 2.4.7) */
+  a:focus-visible, button:focus-visible, .rel-chip:focus-visible,
+  .ov-card:focus-visible, .enum-chip:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    tr.flash td { animation: none; }
+  }
   footer { color: var(--muted); font-size: 11.5px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 14px; }
   code.inline { background: var(--panel-2); padding: 1px 6px; border-radius: 5px; font-size: 12px; }
 </style>
@@ -577,9 +586,9 @@ function typeHtml(fl) {
   let inner;
   if (fl.ref && fl.ref.startsWith("enum:")) {
     const en = fl.ref.slice(5);
-    inner = `<a data-enum="${en}" class="type-enum">${fl.type}</a>`;
+    inner = `<a role="link" tabindex="0" data-enum="${en}" class="type-enum">${fl.type}</a>`;
   } else if (fl.ref && MODELS[fl.ref]) {
-    inner = `<a data-model="${fl.ref}">${fl.type}</a>`;
+    inner = `<a role="link" tabindex="0" data-model="${fl.ref}">${fl.type}</a>`;
   } else if (PRIMITIVES.has(fl.type)) {
     inner = `<span class="type-prim">${fl.type}</span>`;
   } else {
@@ -613,17 +622,46 @@ function buildNav() {
   nav.innerHTML = html;
 }
 
+// Maximal inheritance chains derived from the `extends` graph (single
+// inheritance). A chain runs base -> ... -> leaf for every leaf that has a
+// parent, so new subclasses appear here automatically.
+function inheritanceChains() {
+  const names = Object.keys(MODELS);
+  const hasChild = new Set(names.map(n => MODELS[n].extends).filter(Boolean));
+  const chains = [];
+  names.forEach(leaf => {
+    if (MODELS[leaf].extends && !hasChild.has(leaf)) {
+      const chain = [];
+      let cur = leaf;
+      while (cur) { chain.unshift(cur); cur = MODELS[cur] ? MODELS[cur].extends : null; }
+      chains.push(chain);
+    }
+  });
+  // Longest chains first for a stable, readable order.
+  chains.sort((a, b) => b.length - a.length || a[a.length - 1].localeCompare(b[b.length - 1]));
+  return chains;
+}
+
 function renderOverview() {
-  const order = ["CatalogedResource","Dataset","DataRelease","DataReleaseInitiation","DataReleaseComponent","DataReleaseCSDGM","Entity","Distribution","License","Location"];
+  // Cards: core resources first (in declaration order), then supporting objects.
+  const roots = Object.keys(MODELS).filter(m => MODELS[m].category === "root");
+  const support = Object.keys(MODELS).filter(m => MODELS[m].category === "support");
+  const order = [...roots, ...support];
   let cards = order.map(m => {
     const fieldCount = allFields(m).length;
     const inh = MODELS[m].extends ? `extends ${MODELS[m].extends}` : "base model";
-    return `<div class="ov-card" data-model="${m}">
+    return `<div class="ov-card" role="button" tabindex="0" data-model="${m}">
         <h3>${m}</h3>
         <p>${MODELS[m].desc}</p>
         <div class="meta">${fieldCount} fields &middot; ${inh}</div>
       </div>`;
   }).join("");
+
+  const chainRows = inheritanceChains().map(chain =>
+    `<div class="rel-grid">` + chain.map((c, i) =>
+      `<span class="rel-chip" role="link" tabindex="0" data-model="${c}">${i ? '<span class="arrow">→</span>' : ''}${c}</span>`
+    ).join("") + `</div>`
+  ).join("");
 
   main.innerHTML = `
     <div class="model-card overview">
@@ -642,25 +680,7 @@ function renderOverview() {
       </div>
 
       <div class="section-h">Inheritance chains</div>
-      <div class="rel-grid">
-        <span class="rel-chip" data-model="CatalogedResource">CatalogedResource</span>
-        <span class="rel-chip" data-model="Dataset"><span class="arrow">→</span>Dataset</span>
-        <span class="rel-chip" data-model="DataRelease"><span class="arrow">→</span>DataRelease</span>
-      </div>
-      <div class="rel-grid">
-        <span class="rel-chip" data-model="Entity">Entity</span>
-        <span class="rel-chip" data-model="Creator"><span class="arrow">→</span>Creator</span>
-        <span class="rel-chip" data-model="Contributor"><span class="arrow">→</span>Contributor</span>
-      </div>
-      <div class="rel-grid">
-        <span class="rel-chip" data-model="DataReleaseInitiationForm">DataReleaseInitiationForm</span>
-        <span class="rel-chip" data-model="DataReleaseInitiation"><span class="arrow">→</span>DataReleaseInitiation</span>
-      </div>
-      <div class="rel-grid">
-        <span class="rel-chip" data-model="DataReleaseComponentForm">DataReleaseComponentForm</span>
-        <span class="rel-chip" data-model="DataReleaseComponentSystem"><span class="arrow">→</span>DataReleaseComponentSystem</span>
-        <span class="rel-chip" data-model="DataReleaseComponent"><span class="arrow">→</span>DataReleaseComponent</span>
-      </div>
+      ${chainRows}
 
       <div class="section-h" style="margin-top:24px">Models</div>
       <div class="cardgrid">${cards}</div>
@@ -703,7 +723,7 @@ function renderModel(name, focusField) {
     </div>`;
 
   if (chain.length) {
-    html += `<div class="inherit-line">Inherits from ${chain.map(c => `<a data-model="${c}">${c}</a>`).join(' ← ')}</div>`;
+    html += `<div class="inherit-line">Inherits from ${chain.map(c => `<a role="link" tabindex="0" data-model="${c}">${c}</a>`).join(' ← ')}</div>`;
   }
   html += `<p class="desc">${m.desc}</p>`;
 
@@ -720,7 +740,7 @@ function renderModel(name, focusField) {
   if (composes.length) {
     html += `<div class="section-h">References these models</div><div class="rel-grid">`;
     composes.forEach(c => {
-      html += `<span class="rel-chip" data-model="${c.ref}">${c.name}<span class="arrow">→</span>${c.isList ? 'list['+c.ref+']' : c.ref}</span>`;
+      html += `<span class="rel-chip" role="link" tabindex="0" data-model="${c.ref}">${c.name}<span class="arrow">→</span>${c.isList ? 'list['+c.ref+']' : c.ref}</span>`;
     });
     html += `</div>`;
   }
@@ -728,14 +748,14 @@ function renderModel(name, focusField) {
   if (refs.length) {
     html += `<div class="section-h">Used by</div><div class="rel-grid">`;
     refs.forEach(r => {
-      html += `<span class="rel-chip" data-model="${r.model}" data-field="${r.field}">${r.model}<span class="arrow">.</span>${r.field}</span>`;
+      html += `<span class="rel-chip" role="link" tabindex="0" data-model="${r.model}" data-field="${r.field}">${r.model}<span class="arrow">.</span>${r.field}</span>`;
     });
     html += `</div>`;
   }
 
   if (kids.length) {
     html += `<div class="section-h">Extended by</div><div class="rel-grid">`;
-    kids.forEach(k => { html += `<span class="rel-chip" data-model="${k}">${k}</span>`; });
+    kids.forEach(k => { html += `<span class="rel-chip" role="link" tabindex="0" data-model="${k}">${k}</span>`; });
     html += `</div>`;
   }
 
@@ -766,7 +786,7 @@ function renderEnum(name) {
     <p class="desc">${e.desc}</p>
     <div class="section-h">Allowed values (${e.values.length})</div>
     <div class="enum-wrap">${e.values.map(v => `<span class="enum-chip">${v}</span>`).join("")}</div>
-    ${usedBy.length ? `<div class="section-h">Used by</div><div class="rel-grid">${usedBy.map(u => `<span class="rel-chip" data-model="${u.model}">${u.model}<span class="arrow">.</span>${u.field}</span>`).join("")}</div>` : ""}
+    ${usedBy.length ? `<div class="section-h">Used by</div><div class="rel-grid">${usedBy.map(u => `<span class="rel-chip" role="link" tabindex="0" data-model="${u.model}" data-field="${u.field}">${u.model}<span class="arrow">.</span>${u.field}</span>`).join("")}</div>` : ""}
   </div>`;
 }
 
@@ -825,11 +845,28 @@ function render() {
 }
 
 /* ---------------------- Interaction ---------------------- */
+// A single activation path for both mouse clicks and keyboard (Enter/Space).
+function activate(el) {
+  if (!el) return;
+  if (el.dataset.enum != null) { go("enum", el.dataset.enum); return; }
+  if (el.dataset.model != null) { go("model", el.dataset.model, el.dataset.field); return; }
+}
+
 document.addEventListener("click", (ev) => {
   const el = ev.target.closest("[data-model],[data-enum]");
   if (!el) return;
-  if (el.dataset.enum) go("enum", el.dataset.enum);
-  else go("model", el.dataset.model, el.dataset.field);
+  activate(el);
+});
+
+// Keyboard operability for the custom controls (chips, cards, type links).
+// Native <button> elements already handle Enter/Space themselves.
+document.addEventListener("keydown", (ev) => {
+  if (ev.key !== "Enter" && ev.key !== " ") return;
+  const el = ev.target.closest("[tabindex]");
+  if (!el || el.tagName === "BUTTON" || el.tagName === "INPUT") return;
+  if (!el.matches("[data-model],[data-enum]")) return;
+  ev.preventDefault();
+  activate(el);
 });
 
 window.addEventListener("hashchange", render);
