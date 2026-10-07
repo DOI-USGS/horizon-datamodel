@@ -118,6 +118,8 @@
   th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--border); }
   td { padding: 9px 10px; border-bottom: 1px solid #1c2735; vertical-align: top; }
   tr:hover td { background: #141d29; }
+  tr.search-row { cursor: pointer; }
+  tr.search-row:hover td { background: #182536; }
   .fname { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--text); font-weight: 600; }
   .ftype { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
   .ftype a { color: var(--accent); cursor: pointer; text-decoration: none; }
@@ -155,6 +157,8 @@
 
   .hidden { display: none !important; }
   .hl { background: #3a3410; border-radius: 3px; }
+  @keyframes flashrow { 0% { background: #2a3a52; } 100% { background: transparent; } }
+  tr.flash td { animation: flashrow 1.6s ease-out; }
   footer { color: var(--muted); font-size: 11.5px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 14px; }
   code.inline { background: var(--panel-2); padding: 1px 6px; border-radius: 5px; font-size: 12px; }
 </style>
@@ -603,7 +607,7 @@ function buildNav() {
   });
   html += `<div class="group-label">Enumerations</div>`;
   Object.keys(ENUMS).forEach(e => {
-    html += `<button class="item" data-enum="${e}">
+    html += `<button class="item ${current==='__enum__'+e?'active':''}" data-enum="${e}">
       <span class="dot" style="background:${COLORS.enum}"></span> ${e}</button>`;
   });
   nav.innerHTML = html;
@@ -667,7 +671,7 @@ function renderOverview() {
     </div>`;
 }
 
-function renderModel(name) {
+function renderModel(name, focusField) {
   const m = MODELS[name];
   if (!m) return;
   const fields = allFields(name);
@@ -684,7 +688,7 @@ function renderModel(name) {
 
   function fieldRows(list) {
     return list.map(fl => `
-      <tr data-field="${fl.name}">
+      <tr data-field="${fl.name}" id="field-${fl.name}">
         <td class="fname">${fl.name}${fl.required ? ' <span class="req">*</span>' : ''}</td>
         <td class="ftype">${typeHtml(fl)}</td>
         <td class="fdesc">${fl.desc || ''}${fl.inherited ? ` <span class="opt">(from ${fl.from})</span>` : ''}</td>
@@ -724,7 +728,7 @@ function renderModel(name) {
   if (refs.length) {
     html += `<div class="section-h">Used by</div><div class="rel-grid">`;
     refs.forEach(r => {
-      html += `<span class="rel-chip" data-model="${r.model}">${r.model}<span class="arrow">.</span>${r.field}</span>`;
+      html += `<span class="rel-chip" data-model="${r.model}" data-field="${r.field}">${r.model}<span class="arrow">.</span>${r.field}</span>`;
     });
     html += `</div>`;
   }
@@ -737,6 +741,15 @@ function renderModel(name) {
 
   html += `</div>`;
   main.innerHTML = html;
+
+  if (focusField) {
+    const row = document.getElementById("field-" + focusField);
+    if (row) {
+      row.scrollIntoView({ block: "center" });
+      row.classList.add("flash");
+      setTimeout(() => row.classList.remove("flash"), 1600);
+    }
+  }
 }
 
 function renderEnum(name) {
@@ -757,52 +770,143 @@ function renderEnum(name) {
   </div>`;
 }
 
+/* ---------------------- View routing ---------------------- */
+// A view is encoded in the URL hash so pages are linkable and Back/Forward work:
+//   #/overview              overview
+//   #/model/<Name>          a model (optionally #/model/<Name>/<field>)
+//   #/enum/<Name>           an enumeration
+//   #/search/<query>        a global search results view
+function hashFor(kind, name, extra) {
+  if (kind === "overview") return "#/overview";
+  if (kind === "model") return "#/model/" + encodeURIComponent(name) + (extra ? "/" + encodeURIComponent(extra) : "");
+  if (kind === "enum") return "#/enum/" + encodeURIComponent(name);
+  if (kind === "search") return "#/search/" + encodeURIComponent(name);
+  return "#/overview";
+}
+
+// Navigate by updating the hash; the hashchange handler does the actual render,
+// which keeps browser history and in-app navigation in sync.
+function go(kind, name, extra) {
+  const h = hashFor(kind, name, extra);
+  if (location.hash === h) render(); // same hash: re-render (e.g. re-flash a field)
+  else location.hash = h;
+}
+
+// Back-compat shim for existing callers.
 function show(target, isEnum) {
-  if (isEnum) { renderEnum(target); current = "__enum__" + target; }
-  else if (target === "__overview__") { renderOverview(); current = target; }
-  else { renderModel(target); current = target; }
+  if (isEnum) go("enum", target);
+  else if (target === "__overview__") go("overview");
+  else go("model", target);
+}
+
+function render() {
+  // Split first, decode each segment after, so an encoded "/" inside a query
+  // (e.g. a search string) is not mistaken for a path separator.
+  const raw = location.hash.replace(/^#\/?/, "");
+  const parts = raw.split("/").map(s => { try { return decodeURIComponent(s); } catch { return s; } });
+  const kind = parts[0] || "overview";
+
+  if (kind === "model" && parts[1] && MODELS[parts[1]]) {
+    renderModel(parts[1], parts[2]);
+    current = parts[1];
+  } else if (kind === "enum" && parts[1] && ENUMS[parts[1]]) {
+    renderEnum(parts[1]);
+    current = "__enum__" + parts[1];
+  } else if (kind === "search" && parts[1]) {
+    renderSearch(parts[1]);
+    current = "__search__";
+    if (searchBox.value !== parts[1]) searchBox.value = parts[1];
+  } else {
+    renderOverview();
+    current = "__overview__";
+  }
   buildNav();
-  main.scrollTop = 0;
-  if (searchBox.value.trim()) applySearch(searchBox.value.trim());
+  if (kind !== "model" || !parts[2]) main.scrollTop = 0;
 }
 
 /* ---------------------- Interaction ---------------------- */
 document.addEventListener("click", (ev) => {
   const el = ev.target.closest("[data-model],[data-enum]");
   if (!el) return;
-  if (el.dataset.enum) show(el.dataset.enum, true);
-  else show(el.dataset.model, false);
+  if (el.dataset.enum) go("enum", el.dataset.enum);
+  else go("model", el.dataset.model, el.dataset.field);
 });
+
+window.addEventListener("hashchange", render);
 
 /* ---------------------- Search ---------------------- */
 const searchBox = document.getElementById("search");
-function applySearch(q) {
-  const ql = q.toLowerCase();
-  // highlight matching rows in current table view
-  document.querySelectorAll("tbody tr[data-field]").forEach(tr => {
-    const txt = tr.textContent.toLowerCase();
-    tr.classList.toggle("hidden", ql && !txt.includes(ql));
+
+// Build a flat index once: every model, enum, field, and enum value, with the
+// text that should match and where clicking a result should land.
+function buildSearchIndex() {
+  const idx = [];
+  Object.keys(MODELS).forEach(mn => {
+    const m = MODELS[mn];
+    idx.push({ kind: "model", label: mn, sub: m.category === "root" ? "core resource" : "supporting object", text: (mn + " " + (m.desc || "")).toLowerCase(), nav: ["model", mn] });
+    allFields(mn).filter(fl => !fl.inherited).forEach(fl => {
+      idx.push({ kind: "field", label: mn + "." + fl.name, sub: fl.type + (fl.desc ? " — " + fl.desc : ""), text: (fl.name + " " + fl.type + " " + (fl.desc || "")).toLowerCase(), nav: ["model", mn, fl.name] });
+    });
   });
+  Object.keys(ENUMS).forEach(en => {
+    const e = ENUMS[en];
+    idx.push({ kind: "enum", label: en, sub: e.desc || "", text: (en + " " + (e.desc || "") + " " + e.values.join(" ")).toLowerCase(), nav: ["enum", en] });
+    e.values.forEach(v => {
+      idx.push({ kind: "value", label: v, sub: "value of " + en, text: (v + " " + en).toLowerCase(), nav: ["enum", en] });
+    });
+  });
+  return idx;
 }
+const SEARCH_INDEX = buildSearchIndex();
+
+function renderSearch(q) {
+  const ql = q.toLowerCase().trim();
+  const hits = ql ? SEARCH_INDEX.filter(e => e.text.includes(ql)) : [];
+  const order = { model: 0, field: 1, enum: 2, value: 3 };
+  hits.sort((a, b) => (order[a.kind] - order[b.kind]) || a.label.localeCompare(b.label));
+
+  const kindLabel = { model: "Model", field: "Field", enum: "Enum", value: "Enum value" };
+  let rows = hits.map(h => `
+      <tr data-nav-kind="${h.nav[0]}" data-nav-name="${h.nav[1]}"${h.nav[2] ? ` data-nav-field="${h.nav[2]}"` : ""} class="search-row">
+        <td class="fname">${h.label}</td>
+        <td class="ftype"><span class="opt">${kindLabel[h.kind]}</span></td>
+        <td class="fdesc">${h.sub || ""}</td>
+      </tr>`).join("");
+
+  main.innerHTML = `<div class="model-card">
+    <div class="model-title"><h2>Search</h2><span class="badge">${hits.length} result${hits.length === 1 ? "" : "s"}</span></div>
+    <p class="desc">Matches for <code class="inline">${q}</code> across model names, fields, enumerations, enum values, and descriptions.</p>
+    ${hits.length
+      ? `<table><thead><tr><th>Match</th><th>Kind</th><th>Detail</th></tr></thead><tbody>${rows}</tbody></table>`
+      : `<p class="opt">No matches. Try a model name, field name, or enum value.</p>`}
+  </div>`;
+}
+
+// Clicking a search result navigates to the right view (and field).
+main.addEventListener("click", (ev) => {
+  const tr = ev.target.closest(".search-row");
+  if (!tr) return;
+  go(tr.dataset.navKind, tr.dataset.navName, tr.dataset.navField);
+});
+
+let searchTimer = null;
 searchBox.addEventListener("input", () => {
   const q = searchBox.value.trim();
-  if (!q) { document.querySelectorAll("tbody tr").forEach(tr => tr.classList.remove("hidden")); return; }
-  // if query matches a model/enum name exactly-ish and we're on overview, jump there
-  applySearch(q);
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    if (q) go("search", q);
+    else if (current === "__search__") go("overview");
+  }, 150);
 });
 searchBox.addEventListener("keydown", (e) => {
   if (e.key !== "Enter") return;
-  const q = searchBox.value.trim().toLowerCase();
-  if (!q) return;
-  const modelMatch = Object.keys(MODELS).find(m => m.toLowerCase() === q)
-    || Object.keys(MODELS).find(m => m.toLowerCase().includes(q));
-  const enumMatch = Object.keys(ENUMS).find(en => en.toLowerCase().includes(q));
-  if (modelMatch) { searchBox.value = ""; show(modelMatch, false); }
-  else if (enumMatch) { searchBox.value = ""; show(enumMatch, true); }
+  const q = searchBox.value.trim();
+  if (q) go("search", q);
 });
 
 /* ---------------------- Boot ---------------------- */
-show("__overview__", false);
+if (!location.hash) render();           // default -> overview
+else render();                          // deep link on load
 </script>
 </body>
 </html>
