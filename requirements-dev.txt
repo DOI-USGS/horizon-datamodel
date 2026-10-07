@@ -1,1 +1,7 @@
 pytest
+
+# Diagram generation (scripts/er_diagram.py).
+# On Windows, prefer installing via conda-forge so the Graphviz binary and
+# pygraphviz are resolved together:
+#   conda install -c conda-forge erdantic
+erdantic

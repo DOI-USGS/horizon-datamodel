@@ -48,6 +48,18 @@ __Data Models__:
 
 ![](./diagrams/Location-diagram.png)
 
+- [x] [Horizon DataReleaseInitiation](./horizon/DataReleaseInitiation.py)
+
+![](./diagrams/DataReleaseInitiation-diagram.png)
+
+- [x] [Horizon DataReleaseComponent](./horizon/DataReleaseComponent.py)
+
+![](./diagrams/DataReleaseComponent-diagram.png)
+
+- [x] [Horizon DataReleaseCSDGM](./horizon/DataReleaseCSDGM.py)
+
+![](./diagrams/DataReleaseCSDGM-diagram.png)
+
 ## Requirements
 
 The [requirements.txt](/requirements.txt) file lists required python packages for running the data catalog.
