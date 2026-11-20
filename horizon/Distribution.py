@@ -1,10 +1,28 @@
 from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel, HttpUrl
 
 from .Entity import Entity
 
 # Placeholder for Distribution Schema Definition
+
+
+class CloudAssetStructureEnum(str, Enum):
+    """Describes how the asset is organized in object storage.
+
+    object: Single object/file (e.g., Cloud Optimized GeoTIFF, GeoParquet,
+        NetCDF)
+    partitioned-collection: Multiple independently readable data objects
+        (e.g., Hive-partitioned Parquet, a directory of per-tile COGs)
+    chunked-store: Multiple interdependent objects comprising one logical
+        dataset; individual objects are not meaningful on their own
+        (e.g., Zarr)
+    """
+
+    single_object = "object"
+    partitioned_collection = "partitioned-collection"
+    chunked_store = "chunked-store"
 
 
 class Checksum(BaseModel):
@@ -45,6 +63,17 @@ class Distribution(BaseModel):
         Example: "https://www.fgdc.gov/schemas/metadata/"
     downloadURL: The URL of the downloadable file in a given format.
     accessURL: A URL of the resource that gives access to a distribution of the dataset.
+    allowPublicCloudAccess: Indicates whether the distribution is approved for
+        public access in cloud object storage. If True, accessURL provides the
+        URL of the publicly accessible cloud asset. If True and accessURL is
+        None, the asset has not yet been published to public cloud storage
+        (publication is in process and the asset is not yet available).
+        If False, the distribution is not to be made publicly accessible in
+        cloud storage. None means not applicable or not yet determined.
+    cloudAssetStructure: Describes how the asset is organized in object storage.
+        For "object", accessURL points to the object itself. For
+        "partitioned-collection" and "chunked-store", accessURL points to a
+        metadata or manifest file that describes the collection or store.
     byteSize: The size of a distribution in bytes.
     checksum: Checksum value and algorithm that enables integrity checks of the
         contents of a file.
@@ -63,6 +92,8 @@ class Distribution(BaseModel):
     conformsTo: HttpUrl | None = None
     downloadURL: HttpUrl | None = None
     accessURL: HttpUrl | None = None
+    allowPublicCloudAccess: bool | None = None
+    cloudAssetStructure: CloudAssetStructureEnum | None = None
     byteSize: int | None = None
     checksum: Checksum | None = None
     modifiedBy: Entity | None = None
